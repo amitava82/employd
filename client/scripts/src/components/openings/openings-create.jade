@@ -1,0 +1,20 @@
+.row
+   .com-md-8
+      form(data-bind="with: opening")
+         .form-group
+            label Title
+            input.form-control(type="text", data-bind="value: title")
+         .form-group
+            label Description
+            textarea.form-control(data-bind="value: description")
+         .form-group
+            label Stages
+         div(data-bind="foreach: stages")
+            .form-group
+               label Name
+               input.form-control(type="text", data-bind="value: name")
+               label Users
+               select.form-control(multiple="true", data-bind="options: $parents[1].users, optionsText: 'firstname', optionsValue: '_id', selectedOptions: users")
+               button.btn.btn-danger(data-bind="click: $parent.removeStage.bind($parent)", type="button") Remove
+         button.btn.btn-default(data-bind="click: addStage", type="button") Add Stage
+         button.btn.btn-primary(data-bind="click: $parent.save") Save

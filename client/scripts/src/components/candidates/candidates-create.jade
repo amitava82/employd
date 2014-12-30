@@ -1,0 +1,26 @@
+.row
+   .com-md-8
+      form(data-bind="with: candidate")
+         .form-group
+            label First Name
+            input.form-control(type="text", data-bind="value: firstname")
+         .form-group
+            label Last Name
+            input.form-control(type="text", data-bind="value: lastname")
+         .form-group
+            label Email
+            input.form-control(type="text", data-bind="value: email")
+         .form-group
+            label Telephone
+            input.form-control(type="text", data-bind="value: telephone")
+         .form-group
+            label Source
+            input.form-control(type="text", data-bind="value: source")
+         .form-group
+            label Resume
+            //input.form-control(type="file", data-bind="value: resume")
+         .form-group
+            label Resume Text
+            textarea.form-control(data-bind="value: resumeText")
+
+         button.btn.btn-primary(data-bind="click: $parent.save", type="button") Save

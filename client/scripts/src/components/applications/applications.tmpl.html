@@ -1,0 +1,13 @@
+
+<h1>app details</h1>
+<div class="row">
+  <div class="col-md-12">
+    <ul data-bind="foreach: applications" class="list-unstyled">
+      <li>
+        <h4 data-bind="text: candidate().firstname"></h4>
+        <p data-bind="text: opening().title"></p><a data-bind="attr: {href: '/app/applications/' + id}" class="btn btn-primary">Details</a>
+        <hr/>
+      </li>
+    </ul>
+  </div>
+</div>

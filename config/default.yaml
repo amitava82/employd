@@ -1,0 +1,18 @@
+keys:
+  mongodb:
+    connectionString: mongodb://admin:amitava@ds029051.mongolab.com:29051/funnel
+  sessions:
+    secret: TEd7RNcGnDsCqDyGWRPM3wahwXapjytS2Uod7st1
+    key: 4ofcob7vut
+    ttl: 86400000
+    cookie:
+      domain: .getfunnel.io
+      maxAge: 86400000
+urls:
+      ui:
+        host: getfunnel.io
+        port: 3000
+        protocol: http
+storage:
+  path: /Users/amitava/funnel/data
+

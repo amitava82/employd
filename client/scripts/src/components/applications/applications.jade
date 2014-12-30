@@ -1,0 +1,9 @@
+h1 app details
+.row
+   .col-md-12
+      ul.list-unstyled(data-bind="foreach: applications")
+         li
+            h4(data-bind="text: candidate().firstname")
+            p(data-bind="text: opening().title")
+            a.btn.btn-primary(data-bind="attr: {href: '/app/applications/' + id}") Details
+            hr

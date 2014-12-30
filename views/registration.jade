@@ -1,0 +1,25 @@
+include  includes/app
+    include includes/site-header
+    body
+        include includes/site-nav
+        .registration
+            .container
+                .row
+                    .col-md-12
+                        form
+                            .form-group
+                                label First Name
+                                input.form-control(type="text", name="firstname")
+                            .form-group
+                                label Last Name
+                                input.form-control(type="text", name="lastname")
+                            .form-group
+                                label Company
+                                input.form-control(type="text", name="company")
+                            .form-group
+                                label Password
+                                input.form-control(type="text", name="password")
+                            .form-group
+                                label Type again
+                                input.form-control(type="text", name="confirmPassword")
+                            button.btn.btn-primary(type="submit") Continue

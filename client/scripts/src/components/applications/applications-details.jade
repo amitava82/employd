@@ -1,0 +1,36 @@
+.row
+   .col-md-12(data-bind="with: application")
+      h3(data-bind="text: opening().title")
+      .well.well-sm(data-bind="with: candidate")
+         p(data-bind="text: firstname + ' ' + lastname")
+         p(data-bind="text: email")
+         p(data-bind="text: telephone")
+         p Current Stage *Technical Round1*
+      h4 Interview Progress
+      .well.well-sm
+         h4 Screening (completed)
+
+         strong Feedback
+         p lorem ispum
+         em Amitava Saga
+         p Dec 12, 2014
+
+      .well.well-sm
+         h4 Technical 1 (current)
+
+         strong Post your feedback
+         textarea.form-control
+         label
+            input(type="radio", name="select")
+            | Select
+         label
+            input(type="radio", name="select")
+            | Reject
+         button.btn.btn-primary Submit
+
+      .well.well-sm
+         h4 Technical 2 (Pending)
+
+
+      .well.well-sm
+         h4 HR Round (Pending)

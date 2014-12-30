@@ -1,0 +1,16 @@
+
+<div class="row">
+  <div class="col-md-9 col-md-offset-3"><a href="/app/openings/new" class="btn btn-primary">Create</a></div>
+</div>
+<hr/>
+<div class="row">
+  <div class="col-md-3">
+    <ul data-bind="foreach: openings" class="list-unstyled">
+      <li><a href="/app/openings/:id" data-bind="text: title, click: $parent.select"></a></li>
+    </ul>
+  </div>
+  <div data-bind="if: selected" class="col-md-9">
+    <h3 data-bind="text: selected().title()"></h3>
+    <p data-bind="text: selected().description()"></p>
+  </div>
+</div>

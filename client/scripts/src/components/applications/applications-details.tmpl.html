@@ -1,0 +1,35 @@
+
+<div class="row">
+  <div data-bind="with: application" class="col-md-12">
+    <h3 data-bind="text: opening().title"></h3>
+    <div data-bind="with: candidate" class="well well-sm">
+      <p data-bind="text: firstname + ' ' + lastname"></p>
+      <p data-bind="text: email"></p>
+      <p data-bind="text: telephone"></p>
+      <p>Current Stage *Technical Round1*</p>
+    </div>
+    <h4>Interview Progress</h4>
+    <div class="well well-sm">
+      <h4>Screening (completed)</h4><strong>Feedback</strong>
+      <p>lorem ispum</p><em>Amitava Saga</em>
+      <p>Dec 12, 2014</p>
+    </div>
+    <div class="well well-sm">
+      <h4>Technical 1 (current)</h4><strong>Post your feedback</strong>
+      <textarea class="form-control"></textarea>
+      <label>
+        <input type="radio" name="select"/>Select
+      </label>
+      <label>
+        <input type="radio" name="select"/>Reject
+      </label>
+      <button class="btn btn-primary">Submit</button>
+    </div>
+    <div class="well well-sm">
+      <h4>Technical 2 (Pending)</h4>
+    </div>
+    <div class="well well-sm">
+      <h4>HR Round (Pending)</h4>
+    </div>
+  </div>
+</div>
