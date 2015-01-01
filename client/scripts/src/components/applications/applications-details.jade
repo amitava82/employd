@@ -2,36 +2,63 @@
    .col-md-12(data-bind="with: application")
       h3(data-bind="text: opening().title")
       button.btn Schedule
+      hr
+      p
+         | Current stage: &nbsp;
+         strong.label.label-info(data-bind="text: current_stage().name")
+         i.icon.icon-user
+         strong.label.label-info(data-bind="text: assigned_to().firstname")
+
+.row
+   .col-md-8(data-bind="with: application")
       .well.well-sm(data-bind="with: candidate")
          p(data-bind="text: firstname + ' ' + lastname")
          p(data-bind="text: email")
          p(data-bind="text: telephone")
-         p Current Stage *Technical Round1*
-      h4 Interview Progress
-      .well.well-sm
-         h4 Screening (completed)
 
-         strong Feedback
-         p lorem ispum
-         em Amitava Saga
-         p Dec 12, 2014
-
-      .well.well-sm
-         h4 Technical 1 (current)
+      .well.well-sm(data-bind="with: current_stage")
+         h4(data-bind="text: name")
 
          strong Post your feedback
          textarea.form-control
-         label
-            input(type="radio", name="select")
-            | Select
-         label
-            input(type="radio", name="select")
-            | Reject
-         button.btn.btn-primary Submit
 
-      .well.well-sm
-         h4 Technical 2 (Pending)
+         .col-md-6
+            label
+               input(type="radio", name="select")
+               | Select
+            label
+               input(type="radio", name="select")
+               | Reject
+         div.pull-right
+            button.btn.btn-primary Save feedback
+            Button.btn.btn-success I'm done
 
+      h4 Interview Progress
+      div(data-bind="foreach: opening().stages")
+         .well.well-sm
+            h4(data-bind="text: name")
 
-      .well.well-sm
-         h4 HR Round (Pending)
+            strong Post your feedback
+            textarea.form-control
+            label
+               input(type="radio", name="select")
+               | Select
+            label
+               input(type="radio", name="select")
+               | Reject
+            button.btn.btn-primary Submit
+
+   .col-md-4
+      h4 Notes
+      .panel
+         .comment
+            p Amitava Saha
+            p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+            .comment-actions
+               a Edit
+               a Remove
+               span.pull-right 12/12/14
+         hr
+         .add-note
+            textarea.form-control(placeholder="Add a new note")
+            button.btn.btn-sm.btn-primary Save

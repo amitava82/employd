@@ -39,11 +39,6 @@ var OpeningModel = function(){
 
   openingSchema.plugin(timestamps);
 
-  openingSchema.statics.createOpening = function(name, user, cb){
-    this.create({name: name, created_by: user }, cb)
-  };
-
-
   return mongoose.model('Opening', openingSchema);
 };
 

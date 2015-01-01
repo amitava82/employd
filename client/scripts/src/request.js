@@ -17,11 +17,17 @@ define(['jquery'], function ($) {
   }
 
   function makeUrl(model, data){
-    var url =  baseUrl + model;
-    if(data.id){
-      url += '/' + data.id;
-      delete data.id;
+    var url = baseUrl;
+
+    if(model instanceof Array){
+      url += '/' + model.join('/');
+    }else{
+      url += model;
+      if(data.id){
+        url += '/' + data.id;
+      }
     }
+    delete data.id;
     return url;
   }
 

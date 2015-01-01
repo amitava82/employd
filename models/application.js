@@ -16,6 +16,24 @@ var ApplicationModel = function(){
     }
   });
 
+  var feedbackSchema = mongoose.Schema({
+    stage_id: {type: ObjId},
+    user: {type: ObjId, ref: 'User'},
+    selected: Boolean,
+    comment: String
+  });
+
+  var stageSchema = mongoose.Schema({
+    name: String,
+    category: {type: String, enum: ['un_screened', 'in_progress', 'completed']},
+    user: {type: ObjId, ref: 'User'},
+    position: Number
+  });
+
+  var logSchema = mongoose.Schema({
+
+  });
+
   var applicationSchema = mongoose.Schema({
     candidate: {
       type: ObjId,
@@ -34,10 +52,12 @@ var ApplicationModel = function(){
     },
     assigned_to: {type: ObjId, ref: 'User'},
     notes: [noteSchema],
-    stage: {}
+    feedbacks: [feedbackSchema],
+    current_stage: {type: ObjId, required: true}
   });
   applicationSchema.index({candidate: 1, opening: 1, organization: 1}, {unique: true});
   applicationSchema.plugin(timestamps);
+
   return mongoose.model('Application', applicationSchema);
 };
 

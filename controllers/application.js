@@ -7,19 +7,36 @@ var output = require('../lib/output');
 module.exports = function (models) {
   var Application = models.Application;
   var User = models.User;
+  var Organization = models.Organization;
+  var Opening = models.Opening;
 
   return {
     create: function(req, res){
-      Application.create({
-        organization: req.session.user.org,
-        candidate: req.body.candidate,
-        opening: req.body.opening
-      }, function(err, application){
-        if(err)
-          output.error(res, err);
-        else
-          output.success(res, application);
-      })
+
+      Opening.findOne({_id: req.body.opening}).exec()
+          .then(function(opening){
+
+            if(!opening) throw new Error('NotFound');
+
+            var stages = opening.stages;
+
+            return Application.create({
+              organization: req.session.user.org,
+              candidate: req.body.candidate,
+              opening: req.body.opening,
+              assigned_to: stages[0].user,
+              current_stage: stages[0].id
+            });
+          })
+          .then(function(app){
+            output.success(res, app);
+          }, function(err){
+            output.error(res, err);
+          });
+    },
+
+    update: function(req, res){
+
     },
 
     list: function (req, res) {
@@ -40,22 +57,49 @@ module.exports = function (models) {
 
     show: function (req, res) {
       Application.findOne({organization: req.session.user.org, _id: req.params.id})
-        .populate('candidate opening')
-        .exec(function(err, application){
-          if(err)
-            output.error(res, err);
-          else{
-            User.populate(application, {
-              path: 'opening.stages.users',
+          .populate('candidate opening')
+          .populate({
+            path: 'assigned_to',
+            select: '-password -salt'
+          })
+          .exec()
+          .then(function(application){
+            if(!application) throw new Error('NotFound');
+
+            return User.populate(application, {
+              path: 'opening.stages.user',
               select: '-password -salt'
-            }, function(err, resp){
-              if(err)
-                output.error(res, err);
-              else
-                output.success(res, resp);
-            })
-          }
-        });
+            });
+          })
+          .then(function(resp){
+            output.success(res, resp);
+          }, function(err){
+            output.error(res, err);
+          }).end();
+    },
+
+    reAssignUser: function (req, res) {
+
+    },
+
+    addFeedback: function (req, res) {
+
+    },
+
+    updateFeedback: function (req, res) {
+
+    },
+
+    addNote: function (req, res) {
+
+    },
+
+    updateNote: function(req, res){
+
+    },
+
+    deleteNote: function(req, res){
+
     }
   }
 };

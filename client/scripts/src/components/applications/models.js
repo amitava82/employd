@@ -7,6 +7,13 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     this.id = data._id;
     this.candidate = ko.observable(data.candidate);
     this.opening = ko.observable(data.opening);
+    this.assigned_to = ko.observable(data.assigned_to);
+    this.current_stage = ko.computed(function(){
+     var opening = self.opening();
+      if(opening){
+       return _.findWhere(opening.stages, {_id: data.current_stage});
+      }
+    })
   }
 
   Application.getAll = function(callback){

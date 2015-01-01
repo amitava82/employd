@@ -12,6 +12,7 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     this.source = ko.observable(data.source);
     this.resume = ko.observable(data.resume);
     this.resumeText = ko.observable(data.resumeText);
+    this.applications = ko.observableArray();
 
   }
 

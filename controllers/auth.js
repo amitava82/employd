@@ -30,6 +30,8 @@ module.exports = function(models){
       }
 
       promise.then(function(user){
+        if(!user) throw new Error('userNotFound');
+
         var passObj = utilities.encryptPassword(req.body.password, user.salt);
         if(user.password !== passObj.password)
           throw new Error("AuthorizationError");

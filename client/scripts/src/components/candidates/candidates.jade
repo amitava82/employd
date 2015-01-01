@@ -23,6 +23,12 @@ hr
                     td(data-bind="text: email")
                     td(data-bind="text: telephone")
                     td(data-bind="text: source")
+                    td
+                        a(href="", data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} ") Create application
+                        div(data-bind="if: $parent.selected() == $data")
+                            select(data-bind="options: $parent.openings, optionsText: 'title', optionsValue: '_id', value: $parent.opening")
+                            a(data-bind="click: $parent.cancelAssign") Cancel
+                            a(data-bind="click: $parent.saveAssign") Save
         //h3(data-bind="text: selected().title()")
         //p(data-bind="text: selected().description()")
              

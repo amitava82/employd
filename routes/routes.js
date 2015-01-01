@@ -37,6 +37,10 @@ module.exports = function (app, controller, middleware) {
   app.get("/api/applications/?", middleware.apiRequest, applicationController.list.bind(applicationController));
   app.get("/api/applications/:id", middleware.apiRequest, applicationController.show.bind(applicationController));
   app.post("/api/applications", middleware.apiRequest, applicationController.create.bind(applicationController));
+  app.put("/api/applications/:id", middleware.apiRequest, applicationController.update.bind(applicationController));
+
+  app.post("/api/applications/:id/feedbacks", middleware.apiRequest, applicationController.addFeedback.bind(applicationController));
+
 
 
   app.get("/api/:model/?", middleware.apiRequest, function(req, res){

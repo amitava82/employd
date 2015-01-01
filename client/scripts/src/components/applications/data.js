@@ -7,6 +7,10 @@ define(['request'], function(request){
 
     getById: function(id, callback){
       request.show('applications', {id: id}, callback);
+    },
+
+    addFeedback: function (appId, data, cb) {
+      request.create(['applications', appId, 'feedbacks'], data, cb);
     }
   }
 });

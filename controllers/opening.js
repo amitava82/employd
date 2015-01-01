@@ -11,10 +11,19 @@ module.exports = function(models){
   return {
     create: function (req, res) {
 
-      Organization.findOne({_id: req.session.user.org}).exec()
+      Organization.findOne({_id: req.session.user.org}).lean().exec()
         .then(function(org){
-          var opening = new Opening({title: req.body.title, description: req.body.description, organization: req.session.user.org});
-          opening.stages = org.stages;
+          var opening = new Opening({
+            title: req.body.title,
+            description: req.body.description,
+            organization: req.session.user.org,
+            created_by: req.session.user._id
+          });
+
+          org.stages.forEach(function (i) {
+            opening.stages.push(i);
+          });
+
           return Opening.create(opening);
         })
         .then(function(result){
@@ -22,6 +31,10 @@ module.exports = function(models){
         }, function(err){
           output.error(res, err);
         });
+    },
+
+    update: function(req, res){
+
     },
 
     show: function(req, res){

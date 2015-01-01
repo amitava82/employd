@@ -63,10 +63,12 @@ var OrganizationModel = function(){
   organizationSchema.statics.createOrg = function(name, owner, callback){
     var org = new this({name: name, owner: owner});
     org.users.push({user: owner, role: 'admin'});
-    org.stages = defaultStages.map(function(i){
+
+    defaultStages.forEach(function(i){
       i.user = owner;
-      return i;
+      org.stages.push(i);
     });
+
     org.save(callback);
   };
 
