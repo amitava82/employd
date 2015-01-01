@@ -5,18 +5,18 @@ var ObjId = mongoose.Schema.Types.ObjectId;
 
 var UserModel = function(){
 
-  var mappingSchema = mongoose.Schema({
-    orgId: {
-      type: ObjId,
-      ref: 'Organization',
-      required: true
-    },
-    role: {
-      type: Number,
-      //ref: 'Role',
-      required: true
-    }
-  });
+  //var mappingSchema = mongoose.Schema({
+  //  orgId: {
+  //    type: ObjId,
+  //    ref: 'Organization',
+  //    required: true
+  //  },
+  //  role: {
+  //    type: Number,
+  //    //ref: 'Role',
+  //    required: true
+  //  }
+  //});
 
   var userSchema = mongoose.Schema({
     firstname: {
@@ -54,7 +54,7 @@ var UserModel = function(){
         ref: 'Organization'
       }
     },
-    organizations: [mappingSchema]
+    timezone: String
   });
 
   userSchema.virtual('name').get(function(){

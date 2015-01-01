@@ -5,15 +5,8 @@ var config          = require("config");
 db.init("mongodb://admin:amitava@ds029051.mongolab.com:29051/funnel");
 
 
-var User = models.User;
+var Organization = models.Organization;
 
-var u = new User();
-
-u.firstname = "test";
-u.lastname = "stuff";
-u.email = "stuff@test.com";
-u.password = "dsad";
-u.salt = "das";
-u.organizations.push({orgId: "549c3275bde313ea1698d4a8", role: 1});
-
-u.save();
+Organization.createOrg('My stupid org', '549ff2365f0b2755c2dda1ec', function (err, doc) {
+  console.log(err);
+});

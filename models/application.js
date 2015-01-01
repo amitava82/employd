@@ -32,6 +32,7 @@ var ApplicationModel = function(){
       ref: 'Organization',
       required: true
     },
+    assigned_to: {type: ObjId, ref: 'User'},
     notes: [noteSchema],
     stage: {}
   });

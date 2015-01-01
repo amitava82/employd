@@ -5,20 +5,23 @@ var config = global.config;
 var output = require('../lib/output');
 
 module.exports = function(models){
-  var Opening = models.Opening;
+  var Opening = models.Opening,
+      Organization = models.Organization;
 
   return {
     create: function (req, res) {
-      var opening = new Opening({title: req.body.title, description: req.body.description, organization: req.session.user.org});
-      opening.stages = req.body.stages;
 
-
-      Opening.create(opening, function(err, opening){
-        if(err)
+      Organization.findOne({_id: req.session.user.org}).exec()
+        .then(function(org){
+          var opening = new Opening({title: req.body.title, description: req.body.description, organization: req.session.user.org});
+          opening.stages = org.stages;
+          return Opening.create(opening);
+        })
+        .then(function(result){
+          output.success(res, result);
+        }, function(err){
           output.error(res, err);
-        else
-          output.success(res, opening);
-      });
+        });
     },
 
     show: function(req, res){

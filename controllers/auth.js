@@ -3,6 +3,7 @@ var utilities = require("../lib/utilities");
 var _ = require("lodash");
 var config = global.config;
 var output = require('../lib/output');
+var when = require('when');
 
 module.exports = function(models){
 
@@ -15,36 +16,48 @@ module.exports = function(models){
   return {
     login: function(req, res){
 
-      User.findOne({email: req.body.email}, function(err, user){
-        if(user){
-          var passObj = utilities.encryptPassword(req.body.password, user.salt);
-          if(user.password !== passObj.password){
-            res.status(401).send({error: "AuthorizationError", message: "Invalid credentials"});
-          }else{
-            //TODO org
-            if(user.org.id){
-              req.session.user = user;
-              req.session.auth = true;
-              res.redirect('/app');
-            }else if(!user.org.id && user.organizations.length){
-              user.org =  user.organizations[0].orgId;
-              user.save(function(err){
-                if(err)
-                  output.error(res, err);
-                else{
-                  req.session.user = user;
-                  req.session.auth = true;
-                  res.redirect('/app');
-                }
-              });
-            }else{
-              res.redirect('/setup');
-            }
-          }
+      var promise = User.findOne({email: req.body.email}).exec();
+
+
+      function handleSuccess(user){
+          req.session.user = user;
+          req.session.auth = true;
+          res.redirect('/app');
+      }
+
+      function handleError(error){
+        output.error(res, error);
+      }
+
+      promise.then(function(user){
+        var passObj = utilities.encryptPassword(req.body.password, user.salt);
+        if(user.password !== passObj.password)
+          throw new Error("AuthorizationError");
+        else if(user.org.id){
+          return user;
         }else{
-          res.status(404).send(err);
+          return Organization.findOne({'users.user': user.id}).exec()
+            .then(function(org){
+              var u = _.find(org.users, function(u){
+                return user.id == u.user.toString();
+              });
+              if(u){
+                user.org = org.id;
+                var deferred = when.defer();
+                user.save(function(err, user){
+                  if(err){
+                    deferred.reject(err);
+                  }else{
+                    deferred.resolve(user);
+                  }
+                });
+                return deferred.promise;
+              }else{
+                throw new Error('MissingOrgError');
+              }
+            });
         }
-      });
+      }).then(handleSuccess, handleError);
     },
 
     signup: function (req, res) {
@@ -71,6 +84,11 @@ module.exports = function(models){
       });
     },
 
+    signout: function (req, res) {
+      req.session.destroy();
+      res.redirect('/signin');
+    },
+
     validateInvite: function(req, res){
       Invite.findOne({invite: req.params.invite}, function(err, invite){
         if(err){
@@ -94,25 +112,19 @@ module.exports = function(models){
             password: passObj.password,
             salt: passObj.salt
           };
-          User.create(newUser, function(err, user){
-            if(err){
-              res.status(400).send(err);
-            }else{
-              var org = new Organization();
-              org.name = req.body.company;
-              org.owner = user._id;
-              org.users.push(user._id);
 
-              org.save(function(err, org){
-                if(org){
-                  Mapping.create({orgId: org._id, userId: user._id, role: 1}, function(err, role){
-                    res.send(200, role);
-                  })
+          User.create(newUser)
+            .then(function(user){
+              return Organization.createOrg(req.body.company, user.id, function(err, org){
+                if(err){
+                  throw err;
+                }else{
+                  output.success(res, user);
                 }
-              });
-            }
-
-          });
+              })
+            }, function(err){
+              output.error(res, err);
+            })
         }
       });
     }

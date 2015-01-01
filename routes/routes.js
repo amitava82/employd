@@ -10,6 +10,7 @@ module.exports = function (app, controller, middleware) {
 
   app.get("/", viewController.index.bind(viewController));
   app.get("/signin", viewController.loginView);
+  app.get("/signout", authController.signout);
   app.post("/signin", authController.login.bind(authController));
   app.post("/signup", authController.signup.bind(authController));
 

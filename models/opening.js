@@ -6,16 +6,18 @@ var ObjId = mongoose.Schema.Types.ObjectId;
 var OpeningModel = function(){
 
   var stageSchema = mongoose.Schema({
-    name: {
-      type: String,
-      required: true
-    },
-    users: [{type: ObjId, ref: 'User'}],
-    feedbacks: [],
-    complete: {type: Boolean, default: false}
+    name: String,
+    category: {type: String, enum: ['un_screened', 'in_progress', 'completed']},
+    user: {type: ObjId, ref: 'User'},
+    position: Number
   });
 
   var openingSchema = mongoose.Schema({
+    created_by: {
+      type: ObjId,
+      ref: 'User',
+      required: true
+    },
     title: {
       type: String,
       required: true
@@ -29,13 +31,19 @@ var OpeningModel = function(){
       ref: 'Organization',
       required: true
     },
+    archived: {type: Boolean, default: false},
     stages: [stageSchema]
 
   });
 
-  //openingSchema.method('add')
 
   openingSchema.plugin(timestamps);
+
+  openingSchema.statics.createOpening = function(name, user, cb){
+    this.create({name: name, created_by: user }, cb)
+  };
+
+
   return mongoose.model('Opening', openingSchema);
 };
 
