@@ -5,7 +5,8 @@ module.exports = function (app, controller, middleware) {
       openingController = controller.opening,
       candidateController = controller.candidate,
       applicationController = controller.application,
-      usersController = controller.user;
+      usersController = controller.user,
+      settingsController = controller.settings;
 
 
   app.get("/", viewController.index.bind(viewController));
@@ -16,6 +17,13 @@ module.exports = function (app, controller, middleware) {
 
   app.get("/confirm/:invite", authController.validateInvite.bind(authController));
   app.post("/confirm/:invite",  authController.setupAccount.bind(authController));
+  app.post("/invite/confirm", authController.acceptInvite.bind(authController));
+
+  app.get("/switch/:id", middleware.authRoute, authController.switchOrg.bind(authController));
+
+  //org stuff
+  app.get("/api/org/users", middleware.apiRequest, settingsController.users.bind(settingsController));
+  app.post("/api/org/users/invite", middleware.apiRequest, settingsController.inviteUser.bind(settingsController));
 
 
   //opening route
@@ -40,7 +48,7 @@ module.exports = function (app, controller, middleware) {
   app.put("/api/applications/:id", middleware.apiRequest, applicationController.update.bind(applicationController));
 
   app.post("/api/applications/:id/feedbacks", middleware.apiRequest, applicationController.addFeedback.bind(applicationController));
-
+  app.post("/api/applications/:id/notes", middleware.apiRequest, applicationController.addNote.bind(applicationController));
 
 
   app.get("/api/:model/?", middleware.apiRequest, function(req, res){

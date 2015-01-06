@@ -69,7 +69,18 @@ var OrganizationModel = function(){
       org.stages.push(i);
     });
 
-    org.save(callback);
+    return org.save(callback);
+  };
+
+  organizationSchema.statics.addUser = function (orgId, userId, role, callback) {
+    this.findOne({_id: orgId}).exec()
+      .then(function (org) {
+        if(!org) throw new Error('NotFound');
+
+        org.users.push({user: userId, role: role});
+        org.save(callback);
+
+      });
   };
 
   organizationSchema.plugin(timestamps);

@@ -1,64 +1,72 @@
 .row
    .col-md-12(data-bind="with: application")
       h3(data-bind="text: opening().title")
-      button.btn Schedule
+      ul.nav.navbar-nav
+         li: button.btn.btn-sm.btn-primary Schedule
+         li.dropdown
+            button.btn.btn-sm.dropdown-toggle(data-toggle="dropdown", data-bind="click: $parent.getUsers.bind($parent)") Change Assignee
+            ul.users-list.dropdown-menu(data-bind="foreach: $parent.users")
+               li: a(data-bind="text: user.firstname, click: $parent.assignUser.bind($parent)", href="#", rel="external")
+
+         li: button.btn.btn-sm Change Stage
       hr
       p
          | Current stage: &nbsp;
          strong.label.label-info(data-bind="text: current_stage().name")
          i.icon.icon-user
          strong.label.label-info(data-bind="text: assigned_to().firstname")
+      hr
 
 .row
    .col-md-8(data-bind="with: application")
+      h3 Candidate Profile
       .well.well-sm(data-bind="with: candidate")
          p(data-bind="text: firstname + ' ' + lastname")
          p(data-bind="text: email")
          p(data-bind="text: telephone")
-
+         a() Resume
+      h3 Current Stage
       .well.well-sm(data-bind="with: current_stage")
          h4(data-bind="text: name")
-
          strong Post your feedback
          textarea.form-control
+         .clearfix
+            .col-md-6
+               label
+                  input(type="radio", name="select")
+                  | Select
+               label
+                  input(type="radio", name="select")
+                  | Reject
+            div.pull-right
+               button.btn.btn-primary Save feedback
+               Button.btn.btn-success I'm done
 
-         .col-md-6
-            label
-               input(type="radio", name="select")
-               | Select
-            label
-               input(type="radio", name="select")
-               | Reject
-         div.pull-right
-            button.btn.btn-primary Save feedback
-            Button.btn.btn-success I'm done
-
-      h4 Interview Progress
+      h4 Previous Stages
       div(data-bind="foreach: opening().stages")
          .well.well-sm
             h4(data-bind="text: name")
+            span.pull-right
+               .label.label-success Selected
+            .panel
+               .comment
+                  p Amitava Saha
+                  p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+                  .comment-actions
+                     a Edit
+                     span.pull-right 12/12/14
 
-            strong Post your feedback
-            textarea.form-control
-            label
-               input(type="radio", name="select")
-               | Select
-            label
-               input(type="radio", name="select")
-               | Reject
-            button.btn.btn-primary Submit
-
-   .col-md-4
+   .col-md-4(data-bind="with: application")
       h4 Notes
-      .panel
+      .panel(data-bind="foreach: notes")
          .comment
-            p Amitava Saha
-            p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+            p(data-bind="text: user.firstname")
+            p(data-bind="text: note")
             .comment-actions
                a Edit
                a Remove
-               span.pull-right 12/12/14
-         hr
-         .add-note
-            textarea.form-control(placeholder="Add a new note")
-            button.btn.btn-sm.btn-primary Save
+               span.pull-right(data-bind="moment: createdAt, format: 'MM/DD/YYYY'")
+      hr
+      .add-note
+         textarea.form-control(placeholder="Add a new note", data-bind="value: $parent.newNote")
+         button.btn.btn-sm.btn-primary(data-bind="click: $parent.addNote.bind($parent)") Save

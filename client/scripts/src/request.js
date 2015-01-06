@@ -20,7 +20,7 @@ define(['jquery'], function ($) {
     var url = baseUrl;
 
     if(model instanceof Array){
-      url += '/' + model.join('/');
+      url +=  model.join('/');
     }else{
       url += model;
       if(data.id){

@@ -11,6 +11,18 @@ define(['request'], function(request){
 
     addFeedback: function (appId, data, cb) {
       request.create(['applications', appId, 'feedbacks'], data, cb);
+    },
+
+    addNote: function(appId, text, cb ){
+      request.create(['applications', appId, 'notes'], {note: text}, cb);
+    },
+
+    getUsers: function(cb){
+      request.list('users', {}, cb);
+    },
+
+    assignUser: function (userId, appId, cb) {
+      request.update('applications', {id: appId, assigned_to: userId}, cb);
     }
   }
 });

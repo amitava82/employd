@@ -7,7 +7,14 @@ nav.navbar.navbar-white.navbar-fixed-top(role='navigation')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-         a.navbar-brand(href='/') Funnel
+         a(href='/') Funnel
+         div.dropdown
+            a.dropdown-toggle(data-toggle="dropdown", href="#", rel="external")
+               span(data-bind="text: user().active_org.name")
+               .caret
+            ul.dropdown-menu(data-bind="foreach: user().orgs")
+               li: a(data-bind="text: name, attr: {href: '/switch/' + _id}", rel="external")
+         div(data-bind="text: user().name + ' (' + user().active_org.role + ')' ")
       // Collect the nav links, forms, and other content for toggling
       .collapse.navbar-collapse.navbar-white-collapse
          ul.nav.navbar-nav.navbar-right
@@ -15,5 +22,6 @@ nav.navbar.navbar-white.navbar-fixed-top(role='navigation')
             li: a(href="/app/applications") Applications
             li: a(href="/app/openings") Openings
             li: a(href="/app/candidates") Candidates
+            li: a(href="/app/settings") Settings
             li
                a(href='/signout', rel="external") Logout

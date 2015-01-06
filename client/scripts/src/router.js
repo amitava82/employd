@@ -41,8 +41,10 @@ define(['knockout', 'pagejs'], function(ko, page){
     }, {
       url: '/applications/:id',
       params:{page: 'applications-details'}
+    }, {
+      url: '/settings',
+      params: {page: 'settings'}
     }
-
     ];
 
     page.base('/app');

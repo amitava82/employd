@@ -5,6 +5,7 @@ module.exports = function(models){
     opening: require("./opening")(models),
     candidate: require("./candidate")(models),
     user: require("./users")(models),
-    application: require('./application')(models)
+    application: require('./application')(models),
+    settings: require('./settings')(models)
   };
 };

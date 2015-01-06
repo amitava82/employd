@@ -18,6 +18,7 @@
           <th>E-mail</th>
           <th>Telephone</th>
           <th>Source</th>
+          <th>Applications</th>
           <th></th>
         </tr>
       </thead>
@@ -28,6 +29,11 @@
           <td data-bind="text: email"></td>
           <td data-bind="text: telephone"></td>
           <td data-bind="text: source"></td>
+          <td>
+            <ul data-bind="foreach: applications" class="list-unstyled">
+              <li data-bind="text: opening.title"></li>
+            </ul>
+          </td>
           <td><a href="" data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} ">Create application</a>
             <div data-bind="if: $parent.selected() == $data">
               <select data-bind="options: $parent.openings, optionsText: 'title', optionsValue: '_id', value: $parent.opening"></select><a data-bind="click: $parent.cancelAssign">Cancel</a><a data-bind="click: $parent.saveAssign">Save</a>

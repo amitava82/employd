@@ -4,6 +4,7 @@ var _ = require("lodash");
 var config = global.config;
 var output = require('../lib/output');
 var when = require('when');
+var uuid = require('uuid');
 
 module.exports = function(models){
 
@@ -12,54 +13,74 @@ module.exports = function(models){
   var Invite = models.Invite;
   var Mapping = models.Mapping;
 
+  function createUser(email, data, orgId){
+    var passObj = utilities.encryptPassword(data.password);
+    var newUser = {
+      active_org: orgId,
+      email: email,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      password: passObj.password,
+      salt: passObj.salt
+    };
+    return User.create(newUser);
+  }
+
+  function createSession(req, user, orgs){
+    var currentOrg = _.findWhere(orgs, {_id: user.active_org});
+    req.session.user = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      orgs: orgs,
+      active_org: currentOrg
+    };
+    req.session.auth = true;
+  }
 
   return {
     login: function(req, res){
 
+      var _user = null;
       var promise = User.findOne({email: req.body.email}).exec();
 
-
-      function handleSuccess(user){
-          req.session.user = user;
-          req.session.auth = true;
-          res.redirect('/app');
-      }
 
       function handleError(error){
         output.error(res, error);
       }
 
       promise.then(function(user){
-        if(!user) throw new Error('userNotFound');
+        if(!user) throw new Error('NotFound');
 
+        _user = user;
         var passObj = utilities.encryptPassword(req.body.password, user.salt);
         if(user.password !== passObj.password)
           throw new Error("AuthorizationError");
-        else if(user.org.id){
-          return user;
+        else if(user.active_org){
+          return User.orgs(user.id);
         }else{
-          return Organization.findOne({'users.user': user.id}).exec()
-            .then(function(org){
-              var u = _.find(org.users, function(u){
-                return user.id == u.user.toString();
+          return User.orgs(user.id)
+            .then(function(orgs){
+
+              if(!orgs.length) throw new Error('MissingOrgError');
+
+              user.active_org = orgs[0]._id;
+              var deferred = when.defer();
+              user.save(function(err, user){
+                if(err){
+                  deferred.reject(err);
+                }else{
+                  deferred.resolve(user);
+                }
               });
-              if(u){
-                user.org = org.id;
-                var deferred = when.defer();
-                user.save(function(err, user){
-                  if(err){
-                    deferred.reject(err);
-                  }else{
-                    deferred.resolve(user);
-                  }
-                });
-                return deferred.promise;
-              }else{
-                throw new Error('MissingOrgError');
-              }
+              return deferred.promise;
             });
         }
-      }).then(handleSuccess, handleError);
+      }).then(function(orgs){
+        createSession(req, _user, orgs);
+        res.redirect('/app');
+
+      }, handleError).end();
     },
 
     signup: function (req, res) {
@@ -79,7 +100,7 @@ module.exports = function(models){
                 URL: url.format({hostname: config.urls.ui.host, port: config.urls.ui.port, protocol: config.urls.ui.protocol, pathname: "/confirm/"+newInvite.invite})
               }, function(status){
                 res.send(200, "OK");
-              })
+              });
             }
           });
         }
@@ -92,43 +113,125 @@ module.exports = function(models){
     },
 
     validateInvite: function(req, res){
-      Invite.findOne({invite: req.params.invite}, function(err, invite){
-        if(err){
+      Invite.findOne({invite: req.params.invite}).lean().exec()
+        .then(function(invite){
+          if(!invite) throw new Error('NotFound');
 
-        }else if(!invite){
+          req.session.request_token = uuid.v4();
 
-        }else{
-          res.render("registration");
-        }
-      });
+          if(invite.org){
+            res.render('setup_account', {invite: invite.invite, request_token: req.session.request_token});
+          }else{
+            res.render("registration", {invite: invite.invite, request_token: req.session.request_token});
+          }
+
+        })
+        .then(null, function (err) {
+          res.render('error', {error: err.message});
+        })
     },
 
+    //This is admin account
     setupAccount: function(req, res){
-      Invite.findOne({invite: req.params.invite}, function(err, invite){
-        if(invite){
-          var passObj = utilities.encryptPassword(req.body.password);
-          var newUser = {
-            email: invite.email,
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            password: passObj.password,
-            salt: passObj.salt
-          };
+      var _invite = null, _user = null;
+      Invite.findOne({invite: req.params.invite}).exec()
+        .then(function(invite){
 
-          User.create(newUser)
-            .then(function(user){
-              return Organization.createOrg(req.body.company, user.id, function(err, org){
-                if(err){
-                  throw err;
-                }else{
-                  output.success(res, user);
-                }
-              })
-            }, function(err){
-              output.error(res, err);
-            })
-        }
-      });
+            if(!invite) throw new Error('NotFound');
+            if(req.session.request_token != req.body.request_token) throw new Error('InvalidRequest');
+
+            _invite = invite;
+            return createUser(invite.email, req.body);
+        })
+        .then(function(user){
+          _user = user;
+          return Organization.createOrg(req.body.company, user.id);
+        })
+        .then(function(org){
+          return User.findOneAndUpdate({_id: _user.id, active_org: org.id}).exec();
+        })
+        .then(function (user) {
+          _user = user;
+          return Invite.findOneAndRemove({_id: req.params.invite}).exec();
+        })
+        .then(function(){
+          return User.orgs(_user.id);
+        })
+        .then(function (orgs) {
+          createSession(req, _user, orgs);
+          res.redirect('/app');
+        }, function (error) {
+          var data = {
+            invite: _invite.invite,
+            request_token: req.session.request_token,
+            fields: req.body
+          };
+          if(_invite.org){
+            res.render('setup_account', data);
+          }else{
+            res.render("registration", data);
+          }
+        })
+    },
+
+    acceptInvite: function(req, res){
+      var _invite = null, _user = null;
+      Invite.findOne({invite: req.body.invite}).populate('org').exec()
+        .then(function(invite){
+          if(!invite) throw new Error('NotFound');
+          if(req.session.request_token != req.body.request_token) throw new Error('InvalidRequest');
+          _invite = invite;
+          return createUser(_invite.email, req.body, _invite.org.id);
+        })
+        .then(function(user){
+          _user = user;
+          Organization.addUser(_invite.org, user.id, _invite.role, function (err, org) {
+            var d = when.defer();
+            if(err)
+              d.reject(err);
+            else
+              d.resolve();
+            return d.promise;
+          })
+        })
+        .then(function () {
+          return Invite.findOneAndRemove({_id: _invite.id}).exec();
+        })
+        .then(function(){
+          return User.orgs(_user.id);
+        })
+        .then(function (orgs) {
+          createSession(req, _user, orgs);
+          res.redirect('/app');
+        }, function (error) {
+          var data = {
+            invite: _invite.invite,
+            request_token: req.session.request_token,
+            fields: req.body,
+            error: error.message
+          };
+          res.render('setup_account', data);
+        })
+    },
+
+    switchOrg: function (req, res) {
+      var orgId = req.params.id;
+      User.orgs(req.session.user.id)
+        .then(function(orgs){
+        var org = _.find(orgs, function(i){
+          return i._id.toString() == orgId;
+        });
+        if(org){
+          return org;
+        }else
+          throw new Error('NotFound');
+        })
+        .then(function (org) {
+          req.session.user.active_org = org;
+          res.redirect('/app');
+        }, function (err) {
+          output.error(res, err);
+        })
     }
   }
 };

@@ -1,0 +1,27 @@
+include  includes/app
+   include includes/site-header
+   body
+      include includes/site-nav
+      .registration
+         .container
+            .row
+               .col-md-12
+                  if error
+                     .alert.alert-danger
+                        p #{error}
+                  form(action="/invite/confirm", method="POST")
+                     .form-group
+                        label First Name
+                        input.form-control(type="text", name="firstname")
+                     .form-group
+                        label Last Name
+                        input.form-control(type="text", name="lastname")
+                     .form-group
+                        label Password
+                        input.form-control(type="password", name="password")
+                     .form-group
+                        label Type again
+                        input.form-control(type="password", name="confirmPassword")
+                     input(type="hidden", name="invite", value=invite)
+                     input(type="hidden", name="request_token", value=request_token)
+                     button.btn.btn-primary(type="submit") Continue

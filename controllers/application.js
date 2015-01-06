@@ -3,12 +3,14 @@ var utilities = require("../lib/utilities");
 var _ = require("lodash");
 var config = global.config;
 var output = require('../lib/output');
+var when = require('when');
 
 module.exports = function (models) {
   var Application = models.Application;
   var User = models.User;
   var Organization = models.Organization;
   var Opening = models.Opening;
+  var Candidate = models.Candidate;
 
   return {
     create: function(req, res){
@@ -21,30 +23,56 @@ module.exports = function (models) {
             var stages = opening.stages;
 
             return Application.create({
-              organization: req.session.user.org,
+              organization: req.session.user.active_org._id,
               candidate: req.body.candidate,
               opening: req.body.opening,
               assigned_to: stages[0].user,
-              current_stage: stages[0].id
+              current_stage: stages[0].id,
+              created_by: req.session.user.id
             });
           })
-          .then(function(app){
-            output.success(res, app);
-          }, function(err){
-            output.error(res, err);
-          });
+        .then(function (app) {
+          return Candidate.findOneAndUpdate({_id: req.body.candidate}, {$push: {applications: app.id}})
+            .exec()
+            .then(function(){
+              output.success(res, app);
+            })
+        })
+        .then(null, function(err){
+          output.error(res, err);
+        });
     },
 
     update: function(req, res){
 
+      var updateObj = {};
+
+      var assignedUser = req.body.assigned_to;
+      if(assignedUser)
+        updateObj.assigned_to = assignedUser;
+
+      Application.findByIdAndUpdate({_id: req.params.id}, updateObj).exec()
+        .then(function (app) {
+          return Application.populate(app, {path: 'assigned_to', select: '-password -salt'});
+        })
+        .then(function (app) {
+          output.success(res, app);
+          }, function (err) {
+            output.error(res, err);
+        })
+
     },
 
     list: function (req, res) {
-      var query =  Application.find({organization: req.session.user.org});
+      var query =  Application.find({organization: req.session.user.active_org._id});
       if(req.query.opening)
         query.where('opening').equals(req.query.opening);
       if(req.query.candidate)
         query.where('candidate').equals(req.query.candidate);
+      if(req.query.created_by)
+        query.where('created_by').equals(req.query.created_by);
+      if(req.query.assigned_to)
+        query.where('assigned_to').equals(req.query.assigned_to);
 
       query.populate('candidate opening');
       query.exec(function(err, list){
@@ -56,7 +84,7 @@ module.exports = function (models) {
     },
 
     show: function (req, res) {
-      Application.findOne({organization: req.session.user.org, _id: req.params.id})
+      Application.findOne({organization: req.session.user.active_org._id, _id: req.params.id})
           .populate('candidate opening')
           .populate({
             path: 'assigned_to',
@@ -67,7 +95,7 @@ module.exports = function (models) {
             if(!application) throw new Error('NotFound');
 
             return User.populate(application, {
-              path: 'opening.stages.user',
+              path: 'opening.stages.user notes.user',
               select: '-password -salt'
             });
           })
@@ -76,10 +104,6 @@ module.exports = function (models) {
           }, function(err){
             output.error(res, err);
           }).end();
-    },
-
-    reAssignUser: function (req, res) {
-
     },
 
     addFeedback: function (req, res) {
@@ -91,6 +115,34 @@ module.exports = function (models) {
     },
 
     addNote: function (req, res) {
+      var d = when.defer();
+      Application.findOne({_id: req.params.id}).exec()
+        .then(function(app){
+          if(app){
+            app.notes.push({user: req.session.user.id, note: req.body.note});
+            app.save(function(err, doc){
+              if(err)
+                d.reject(err);
+              else
+                d.resolve(doc);
+            });
+            return d.promise;
+          }else{
+            throw new Error("NotFound");
+          }
+        })
+        .then(function (doc) {
+          return User.populate(doc, {
+            path: 'notes.user',
+            select: '-password -salt'
+          });
+
+        })
+        .then(function(doc){
+          output.success(res, doc);
+        }, function (err) {
+          output.error(res, err);
+        }).end();
 
     },
 
@@ -99,6 +151,19 @@ module.exports = function (models) {
     },
 
     deleteNote: function(req, res){
+
+    },
+
+    reassign: function (req, res) {
+      var assignedUser = req.body.assigned_to;
+
+      //TODO check permission
+      Application.findByIdAndUpdate({_id: req.params.id, assigned_to: assignedUser}).exec()
+        .then(function (app) {
+          output.success(res, app);
+        }, function (err) {
+          output.error(res, err);
+        })
 
     }
   }

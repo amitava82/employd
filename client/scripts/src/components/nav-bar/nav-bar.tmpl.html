@@ -3,7 +3,14 @@
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display-->
     <div class="navbar-header">
-      <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Funnel</a>
+      <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/">Funnel</a>
+      <div class="dropdown"><a data-toggle="dropdown" href="#" rel="external" class="dropdown-toggle"><span data-bind="text: user().active_org.name"></span>
+          <div class="caret"></div></a>
+        <ul data-bind="foreach: user().orgs" class="dropdown-menu">
+          <li><a data-bind="text: name, attr: {href: '/switch/' + _id}" rel="external"></a></li>
+        </ul>
+      </div>
+      <div data-bind="text: user().name + ' (' + user().active_org.role + ')' "></div>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling-->
     <div class="collapse navbar-collapse navbar-white-collapse">
@@ -12,6 +19,7 @@
         <li><a href="/app/applications">Applications</a></li>
         <li><a href="/app/openings">Openings</a></li>
         <li><a href="/app/candidates">Candidates</a></li>
+        <li><a href="/app/settings">Settings</a></li>
         <li><a href="/signout" rel="external">Logout</a></li>
       </ul>
     </div>

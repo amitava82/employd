@@ -6,6 +6,8 @@ var output = require('../lib/output');
 
 module.exports = function(models){
   var User = models.User;
+  var Application = models.Application;
+  var Organization = models.Organization;
 
   return {
     create: function (req, res) {
@@ -18,7 +20,7 @@ module.exports = function(models){
     },
 
     show: function(req, res){
-      User.findOne({_id: req.params.id, organization: req.session.user.org}, '-password -salt', function(err, resp){
+      User.findOne({_id: req.params.id, organization: req.session.user.active_org._id}, '-password -salt', function(err, resp){
         if(err){
           output.error(res, err);
         }else{
@@ -28,14 +30,12 @@ module.exports = function(models){
     },
 
     list: function (req, res) {
-      User.find({'organizations.orgId': req.session.user.org}, '-password -salt', function(err, list){
-        if(err)
+      Organization.findOne({_id: req.session.user.active_org._id}).select('users').populate('users.user', '-password -salt').exec()
+        .then(function (org) {
+          output.success(res, org.users);
+        }, function(err){
           output.error(res, err);
-        else{
-          output.success(res, list);
-        }
-
-      });
+        });
     },
 
     delete: function (req, res) {

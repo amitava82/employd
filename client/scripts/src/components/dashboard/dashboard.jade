@@ -1,6 +1,13 @@
 h1 Dashboard
 .row
-    .col-md-12
+    .col-md-4
+        .list-group
+            a.list-group-item(href="#", data-bind="click: doFilter.bind(null, 'created'), css: {active: filter() == 'created'}") My Items
+            a.list-group-item(href="#", data-bind="click: doFilter.bind(null, 'assigned'), css: {active: filter() == 'assigned'}") Assigned
+            a.list-group-item(href="#", data-bind="click: doFilter.bind(null, 'scheduled'), css: {active: filter() == 'scheduled'}") Scheduled
+            a.list-group-item(href="#") All
+
+    .col-md-8
         table.table.table-striped
             thead
                 tr
@@ -9,22 +16,10 @@ h1 Dashboard
                     th Current Stage
                     th Schedule
                     th
-            tbody
+            tbody(data-bind="foreach: applications")
                 tr
-                    td Amitava Saha
-                    td UI Developer
-                    td Screening
-                    td
-                    td: a.btn.btn-primary.btn-sm(href="/app/applications/123") Details
-                tr
-                    td Candidate
-                    td Node JS
-                    td Telephonic
-                    td 12/31/2014, 3:30PM
-                    td: a.btn.btn-primary.btn-sm(href="/app/applications/123") Details
-                tr
-                    td Candidate 2
-                    td UI Developer
-                    td HR
-                    td
-                    td: a.btn.btn-primary.btn-sm(href="/app/applications/123") Details
+                    td(data-bind="text: candidate.firstname + ' ' + candidate.lastname")
+                    td(data-bind="text: opening.title")
+                    td(data-bind="text: current_stage.name")
+                    td Not scheduled
+                    td: a.btn.btn-primary.btn-sm(data-bind="attr: {href: '/app/applications/' + id}") Details

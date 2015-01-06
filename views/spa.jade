@@ -1,7 +1,7 @@
 include  includes/app
     include includes/app-header
     body
-        <nav-bar params="$root"></nav-bar>
+        <nav-bar params="app: $root"></nav-bar>
         #container.container
             div(data-bind="component: {name:route().page, params: $root}")
 

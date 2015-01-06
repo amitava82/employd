@@ -15,6 +15,7 @@ hr
                     th E-mail
                     th Telephone
                     th Source
+                    th Applications
                     th
             tbody(data-bind="foreach: candidates")
                 tr
@@ -23,6 +24,9 @@ hr
                     td(data-bind="text: email")
                     td(data-bind="text: telephone")
                     td(data-bind="text: source")
+                    td: ul.list-unstyled(data-bind="foreach: applications")
+                        li(data-bind="text: opening.title")
+
                     td
                         a(href="", data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} ") Create application
                         div(data-bind="if: $parent.selected() == $data")

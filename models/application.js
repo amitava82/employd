@@ -13,6 +13,10 @@ var ApplicationModel = function(){
     note: {
       type: String,
       required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
     }
   });
 
@@ -50,7 +54,8 @@ var ApplicationModel = function(){
       ref: 'Organization',
       required: true
     },
-    assigned_to: {type: ObjId, ref: 'User'},
+    assigned_to: {type: ObjId, ref: 'User', required: true},
+    created_by: {type: ObjId, ref: 'User', required: true},
     notes: [noteSchema],
     feedbacks: [feedbackSchema],
     current_stage: {type: ObjId, required: true}

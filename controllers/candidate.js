@@ -6,10 +6,12 @@ var output = require('../lib/output');
 
 module.exports = function(models){
   var Candidate = models.Candidate;
+  var Application = models.Application;
+  var Opening = models.Opening;
 
   return {
     create: function (req, res) {
-      Candidate.create(_.extend({organization: req.session.user.org}, req.body), function(err, opening){
+      Candidate.create(_.extend({organization: req.session.user.active_org._id}, req.body), function(err, opening){
         if(err)
           output.error(res, err);
         else
@@ -18,7 +20,7 @@ module.exports = function(models){
     },
 
     show: function(req, res){
-      Candidate.findOne({_id: req.params.id, organization: req.session.user.org}, function(err, resp){
+      Candidate.findOne({_id: req.params.id, organization: req.session.user.active_org._id}, function(err, resp){
         if(err){
           output.error(res, err);
         }else{
@@ -28,12 +30,17 @@ module.exports = function(models){
     },
 
     list: function (req, res) {
-      Candidate.find({organization: req.session.user.org}, function(err, list){
-        if(err)
+      Candidate.find({organization: req.session.user.active_org._id})
+        .populate('applications')
+        .exec()
+        .then(function (list) {
+          return Candidate.populate(list, {path: 'applications.opening', select: 'title',  model: 'Opening'});
+        })
+        .then(function(list){
+          output.success(res, list)
+        }, function (err) {
           output.error(res, err);
-        else
-          output.success(res, list);
-      });
+        }).end();
     },
 
     delete: function (req, res) {

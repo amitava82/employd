@@ -13,8 +13,27 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
       if(opening){
        return _.findWhere(opening.stages, {_id: data.current_stage});
       }
-    })
+    });
+
+    this.notes = ko.observableArray(data.notes);
   }
+
+  Application.prototype.addNote = function (text, cb) {
+    var self = this;
+    svc.addNote(self.id, text, function (err, app) {
+      if(app){
+        self.notes(app.notes);
+      }
+      cb(err);
+    })
+  };
+
+  Application.prototype.assignUser = function (user) {
+    var self = this;
+    svc.assignUser(user.user._id, self.id, function (err, app) {
+      self.assigned_to(app.assigned_to);
+    });
+  };
 
   Application.getAll = function(callback){
     svc.getApplications({}, function(err, list){

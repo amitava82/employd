@@ -2,62 +2,80 @@
 <div class="row">
   <div data-bind="with: application" class="col-md-12">
     <h3 data-bind="text: opening().title"></h3>
-    <button class="btn">Schedule</button>
+    <ul class="nav navbar-nav">
+      <li>
+        <button class="btn btn-sm btn-primary">Schedule</button>
+      </li>
+      <li class="dropdown">
+        <button data-toggle="dropdown" data-bind="click: $parent.getUsers.bind($parent)" class="btn btn-sm dropdown-toggle">Change Assignee</button>
+        <ul data-bind="foreach: $parent.users" class="users-list dropdown-menu">
+          <li><a data-bind="text: user.firstname, click: $parent.assignUser.bind($parent)" href="#" rel="external"></a></li>
+        </ul>
+      </li>
+      <li>
+        <button class="btn btn-sm">Change Stage</button>
+      </li>
+    </ul>
     <hr/>
     <p>Current stage: &nbsp;<strong data-bind="text: current_stage().name" class="label label-info"></strong><i class="icon icon-user"></i><strong data-bind="text: assigned_to().firstname" class="label label-info"></strong></p>
+    <hr/>
   </div>
 </div>
 <div class="row">
   <div data-bind="with: application" class="col-md-8">
+    <h3>Candidate Profile</h3>
     <div data-bind="with: candidate" class="well well-sm">
       <p data-bind="text: firstname + ' ' + lastname"></p>
       <p data-bind="text: email"></p>
-      <p data-bind="text: telephone"></p>
+      <p data-bind="text: telephone"></p><a>Resume</a>
     </div>
+    <h3>Current Stage</h3>
     <div data-bind="with: current_stage" class="well well-sm">
       <h4 data-bind="text: name"></h4><strong>Post your feedback</strong>
       <textarea class="form-control"></textarea>
-      <div class="col-md-6">
-        <label>
-          <input type="radio" name="select"/>Select
-        </label>
-        <label>
-          <input type="radio" name="select"/>Reject
-        </label>
-      </div>
-      <div class="pull-right">
-        <button class="btn btn-primary">Save feedback</button>
-        <Button class="btn btn-success">I'm done</Button>
+      <div class="clearfix">
+        <div class="col-md-6">
+          <label>
+            <input type="radio" name="select"/>Select
+          </label>
+          <label>
+            <input type="radio" name="select"/>Reject
+          </label>
+        </div>
+        <div class="pull-right">
+          <button class="btn btn-primary">Save feedback</button>
+          <Button class="btn btn-success">I'm done</Button>
+        </div>
       </div>
     </div>
-    <h4>Interview Progress</h4>
+    <h4>Previous Stages</h4>
     <div data-bind="foreach: opening().stages">
       <div class="well well-sm">
-        <h4 data-bind="text: name"></h4><strong>Post your feedback</strong>
-        <textarea class="form-control"></textarea>
-        <label>
-          <input type="radio" name="select"/>Select
-        </label>
-        <label>
-          <input type="radio" name="select"/>Reject
-        </label>
-        <button class="btn btn-primary">Submit</button>
+        <h4 data-bind="text: name"></h4><span class="pull-right">
+          <div class="label label-success">Selected</div></span>
+        <div class="panel">
+          <div class="comment">
+            <p>Amitava Saha</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            <div class="comment-actions"><a>Edit</a><span class="pull-right">12/12/14</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div data-bind="with: application" class="col-md-4">
     <h4>Notes</h4>
-    <div class="panel">
+    <div data-bind="foreach: notes" class="panel">
       <div class="comment">
-        <p>Amitava Saha</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
-        <div class="comment-actions"><a>Edit</a><a>Remove</a><span class="pull-right">12/12/14</span></div>
+        <p data-bind="text: user.firstname"></p>
+        <p data-bind="text: note"></p>
+        <div class="comment-actions"><a>Edit</a><a>Remove</a><span data-bind="moment: createdAt, format: 'MM/DD/YYYY'" class="pull-right"></span></div>
       </div>
-      <hr/>
-      <div class="add-note">
-        <textarea placeholder="Add a new note" class="form-control"></textarea>
-        <button class="btn btn-sm btn-primary">Save</button>
-      </div>
+    </div>
+    <hr/>
+    <div class="add-note">
+      <textarea placeholder="Add a new note" data-bind="value: $parent.newNote" class="form-control"></textarea>
+      <button data-bind="click: $parent.addNote.bind($parent)" class="btn btn-sm btn-primary">Save</button>
     </div>
   </div>
 </div>

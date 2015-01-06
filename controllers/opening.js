@@ -11,13 +11,13 @@ module.exports = function(models){
   return {
     create: function (req, res) {
 
-      Organization.findOne({_id: req.session.user.org}).lean().exec()
+      Organization.findOne({_id: req.session.user.active_org._id}).lean().exec()
         .then(function(org){
           var opening = new Opening({
             title: req.body.title,
             description: req.body.description,
-            organization: req.session.user.org,
-            created_by: req.session.user._id
+            organization: req.session.user.active_org._id,
+            created_by: req.session.user.id
           });
 
           org.stages.forEach(function (i) {
@@ -38,13 +38,13 @@ module.exports = function(models){
     },
 
     show: function(req, res){
-      Opening.findOne({_id: req.params.id, organization: req.session.user.org}, function(err, resp){
+      Opening.findOne({_id: req.params.id, organization: req.session.user.active_org._id}, function(err, resp){
         output.success(res, resp);
       });
     },
 
     list: function (req, res) {
-      Opening.find({organization: req.session.user.org})
+      Opening.find({organization: req.session.user.active_org._id})
         .lean()
         .populate('organization stages.users ')
         .exec(function(err, list){
