@@ -23,6 +23,10 @@ define(['request'], function(request){
 
     assignUser: function (userId, appId, cb) {
       request.update('applications', {id: appId, assigned_to: userId}, cb);
+    },
+
+    changeStage: function (appId, stageId, cb) {
+      request.update('applications', {id: appId, current_stage: stageId}, cb);
     }
   }
 });

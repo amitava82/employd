@@ -44,21 +44,39 @@ module.exports = function (models) {
     },
 
     update: function(req, res){
-
+      var self = this;
       var updateObj = {};
 
       var assignedUser = req.body.assigned_to;
-      if(assignedUser)
-        updateObj.assigned_to = assignedUser;
+      var current_stage = req.body.current_stage;
 
-      Application.findByIdAndUpdate({_id: req.params.id}, updateObj).exec()
-        .then(function (app) {
-          return Application.populate(app, {path: 'assigned_to', select: '-password -salt'});
+      Application.findOne({_id: req.params.id})
+        .populate('opening')
+        .exec()
+        .then(function(application){
+          if(!application) throw new Error('NotFound');
+
+          if(assignedUser) application.assigned_to = assignedUser;
+          if(current_stage){
+            var _stage = _.find(application.opening.stages, {id: current_stage});
+            if(!_stage) throw new Error('NotFound');
+
+            application.current_stage = current_stage;
+            assignedUser = assignedUser || _stage.user;
+          }
+
+          var d = when.defer();
+          application.save(function(err, app){
+            if(err) d.reject(err);
+            else d.resolve(app)
+          });
+
+          return d.promise;
         })
         .then(function (app) {
-          output.success(res, app);
-          }, function (err) {
-            output.error(res, err);
+          self.show(req, res);
+        }, function (err) {
+          output.error(res,err);
         })
 
     },
@@ -73,7 +91,8 @@ module.exports = function (models) {
         query.where('created_by').equals(req.query.created_by);
       if(req.query.assigned_to)
         query.where('assigned_to').equals(req.query.assigned_to);
-
+      //if(req.query.scheduled)
+        //query.where
       query.populate('candidate opening');
       query.exec(function(err, list){
         if(err)

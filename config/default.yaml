@@ -1,6 +1,11 @@
 keys:
   mongodb:
     connectionString: mongodb://admin:amitava@ds029051.mongolab.com:29051/funnel
+  redis:
+    session:
+      server: localhost
+      port: 6379
+      db: 0
   sessions:
     secret: TEd7RNcGnDsCqDyGWRPM3wahwXapjytS2Uod7st1
     key: 4ofcob7vut

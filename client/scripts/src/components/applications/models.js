@@ -8,10 +8,13 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     this.candidate = ko.observable(data.candidate);
     this.opening = ko.observable(data.opening);
     this.assigned_to = ko.observable(data.assigned_to);
-    this.current_stage = ko.computed(function(){
+    this.current_stage = ko.observable(data.current_stage);
+
+    this.stage = ko.computed(function(){
      var opening = self.opening();
+     var stage = self.current_stage();
       if(opening){
-       return _.findWhere(opening.stages, {_id: data.current_stage});
+       return _.findWhere(opening.stages, {_id: stage});
       }
     });
 
@@ -33,6 +36,13 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     svc.assignUser(user.user._id, self.id, function (err, app) {
       self.assigned_to(app.assigned_to);
     });
+  };
+
+  Application.prototype.changeStage = function (stage) {
+    var self = this;
+    svc.changeStage(self.id, stage._id, function (err, app) {
+      self.current_stage(app.current_stage);
+    })
   };
 
   Application.getAll = function(callback){

@@ -5,11 +5,13 @@ var methodOverride  = require("method-override");
 //var csrf            = require('csurf');
 var cookieParser    = require("cookie-parser");
 var session         = require("express-session");
+var redis           = require('redis');
 var RedisSessionStore = require('connect-redis')(session);
 var compress        = require("compression");
 //var helmet          = require('helmet');
 var config          = require("config");
 var db              = require("./lib/db");
+var async           = require("async");
 
 
 global.config = config;
@@ -23,37 +25,51 @@ var port = process.env.PORT || 3000;
 
 db.init(config.keys.mongodb.connectionString);
 
-app.disable('x-powered-by');
+var sessionClient = redis.createClient(config.keys.redis.session.port, config.keys.redis.session.server);
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+async.parallel({
+  redisClient: function (done) {
+    sessionClient.select(config.keys.redis.session.db, done);
+  }
+}, function(err, results){
+  if(err){
+    throw err;
+  }else{
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-// parse application/json
-app.use(bodyParser.json());
-//app.use(helmet.xframe());
-//app.use(helmet.iexss());
-//app.use(helmet.contentTypeOptions());
-//app.use(helmet.cacheControl());
-app.use(cookieParser());
-app.use(methodOverride());
-app.use(session({
-  store: new RedisSessionStore({
-    ttl: config.keys.sessions.ttl
-  }),
-  resave: false,
-  saveUninitialized: false,
-  secret: config.keys.sessions.secret,
-  key: config.keys.sessions.key,
-  cookie: config.keys.sessions.cookie
-}));
+    app.disable('x-powered-by');
+
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
+
+    // parse application/x-www-form-urlencoded
+    app.use(bodyParser.urlencoded({ extended: true }));
+    // parse application/json
+    app.use(bodyParser.json());
+    //app.use(helmet.xframe());
+    //app.use(helmet.iexss());
+    //app.use(helmet.contentTypeOptions());
+    //app.use(helmet.cacheControl());
+    app.use(cookieParser());
+    app.use(methodOverride());
+    app.use(session({
+      store: new RedisSessionStore({
+        ttl: config.keys.sessions.ttl,
+        client: sessionClient
+      }),
+      resave: false,
+      saveUninitialized: false,
+      secret: config.keys.sessions.secret,
+      key: config.keys.sessions.key,
+      cookie: config.keys.sessions.cookie
+    }));
 //app.use(csrf());
-app.use(compress());
-app.use(express.static(path.join(__dirname, 'client')));
+    app.use(compress());
+    app.use(express.static(path.join(__dirname, 'client')));
 
-routes(app, controllers, middleware);
+    routes(app, controllers, middleware);
 
-app.listen(port, function(){
-  console.log("express is running on ", port);
+    app.listen(port, function(){
+      console.log("express is running on ", port);
+    });
+  }
 });
