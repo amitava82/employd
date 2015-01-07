@@ -62,7 +62,7 @@ module.exports = function (models) {
             if(!_stage) throw new Error('NotFound');
 
             application.current_stage = current_stage;
-            assignedUser = assignedUser || _stage.user;
+            application.assigned_to = assignedUser || _stage.user;
           }
 
           var d = when.defer();

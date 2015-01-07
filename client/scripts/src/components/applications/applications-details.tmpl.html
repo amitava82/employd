@@ -29,13 +29,13 @@
 <div class="row">
   <div data-bind="with: application" class="col-md-8">
     <h3>Candidate Profile</h3>
-    <div data-bind="with: candidate" class="well well-sm">
+    <div data-bind="with: candidate" class="box">
       <p data-bind="text: firstname + ' ' + lastname"></p>
       <p data-bind="text: email"></p>
       <p data-bind="text: telephone"></p><a>Resume</a>
     </div>
     <h3>Current Stage</h3>
-    <div data-bind="with: stage" class="well well-sm">
+    <div data-bind="with: stage" class="box">
       <h4 data-bind="text: name"></h4><strong>Post your feedback</strong>
       <textarea class="form-control"></textarea>
       <div class="clearfix">
@@ -55,7 +55,7 @@
     </div>
     <h4>Previous Stages</h4>
     <div data-bind="foreach: opening().stages">
-      <div class="well well-sm">
+      <div class="box">
         <h4 data-bind="text: name"></h4><span class="pull-right">
           <div class="label label-success">Selected</div></span>
         <div class="panel">

@@ -1470,7 +1470,7 @@ input[type="number"]::-webkit-inner-spin-button {
   color: #666666;
   vertical-align: middle;
   background-color: transparent;
-  border: 1px solid transparent;
+  border: 1px solid #dce4ec;
   border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -2496,7 +2496,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   line-height: 1;
   text-align: center;
   background-color: transparent;
-  border: 1px solid transparent;
+  border: 1px solid #dce4ec;
   border-radius: 3px;
 }
 .input-group-addon.input-sm {
@@ -6405,7 +6405,6 @@ input[type=number],
 [type=email].form-control,
 [type=tel].form-control {
   padding: 0;
-  border: none;
   border-radius: 0;
   -webkit-box-shadow: inset 0 -1px 0 #dddddd;
   box-shadow: inset 0 -1px 0 #dddddd;
@@ -6661,4 +6660,7 @@ select.form-control:focus {
 }
 .registration {
   padding-top: 100px;
+}
+.box {
+  border: 1px solid #eeeeee;
 }

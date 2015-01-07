@@ -26,6 +26,7 @@ var port = process.env.PORT || 3000;
 db.init(config.keys.mongodb.connectionString);
 
 var sessionClient = redis.createClient(config.keys.redis.session.port, config.keys.redis.session.server);
+sessionClient.auth(config.keys.redis.session.key);
 
 async.parallel({
   redisClient: function (done) {

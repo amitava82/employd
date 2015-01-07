@@ -42,6 +42,7 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     var self = this;
     svc.changeStage(self.id, stage._id, function (err, app) {
       self.current_stage(app.current_stage);
+      self.assigned_to(app.assigned_to);
     })
   };
 
