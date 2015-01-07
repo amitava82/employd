@@ -1,58 +1,64 @@
-.row
-   .col-md-12(data-bind="with: application")
-      h3(data-bind="text: opening().title")
-      div
-         ul.nav.navbar-nav
-            li: button.btn.btn-sm.btn-primary Schedule
-            li.dropdown
-               button.btn.btn-sm.dropdown-toggle(data-toggle="dropdown", data-bind="click: $parent.getUsers.bind($parent)") Change Assignee
+.row(data-bind="with: application")
+   .col-md-12
+      .page-title
+         h1
+            span(data-bind="text: opening().title")
+            small.mlm
+               span(data-bind="text: assigned_to().firstname")
+               | &nbsp; / &nbsp;
+               span(data-bind="text: stage().name")
+   .col-md-12
+      .action-btns
+            div: button.btn.btn-primary Schedule
+            div.dropdown
+               button.btn.btn-info.dropdown-toggle(data-toggle="dropdown", data-bind="click: $parent.getUsers.bind($parent)") Change Assignee
                ul.users-list.dropdown-menu(data-bind="foreach: $parent.users")
                   li: a(data-bind="text: user.firstname, click: $parent.assignUser.bind($parent)", href="#", rel="external")
 
-            li.dropdown
-               button.btn.btn-sm.dropdown-toggle(data-toggle="dropdown") Change Stage
+            div.dropdown
+               button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Change Stage
                ul.dropdown-menu(data-bind="foreach: opening().stages")
                   li: a(data-bind="text: name, click: $parent.changeStage.bind($parent)")
-      hr
-      p
-         | Current stage: &nbsp;
-         strong.label.label-info(data-bind="text: stage().name")
-         i.icon.icon-user
-         strong.label.label-info(data-bind="text: assigned_to().firstname")
-      hr
 
 .row
    .col-md-8(data-bind="with: application")
-      h3 Candidate Profile
-      .box(data-bind="with: candidate")
-         p(data-bind="text: firstname + ' ' + lastname")
-         p(data-bind="text: email")
-         p(data-bind="text: telephone")
-         a() Resume
-      h3 Current Stage
-      .box(data-bind="with: stage")
-         h4(data-bind="text: name")
-         strong Post your feedback
-         textarea.form-control
-         .clearfix
-            .col-md-6
-               label
-                  input(type="radio", name="select")
-                  | Select
-               label
-                  input(type="radio", name="select")
-                  | Reject
-            div.pull-right
-               button.btn.btn-primary Save feedback
-               Button.btn.btn-success I'm done
+      .panel.panel-info
+         .panel-heading
+            h4.panel-title Candidate Profile
+         .panel-body(data-bind="with: candidate")
+            p(data-bind="text: firstname + ' ' + lastname")
+            p(data-bind="text: email")
+            p(data-bind="text: telephone")
+            a() Resume
 
-      h4 Previous Stages
+      h3 Current Stage
+      .panel.panel-primary(data-bind="with: stage", style="margin-bottom: 40px")
+         .panel-heading
+            h4.panel-title(data-bind="text: name")
+         .panel-body
+            strong Post your feedback
+            textarea.form-control
+            .clearfix
+               .col-md-6
+                  label
+                     input(type="radio", name="select")
+                     | Select
+                  label
+                     input(type="radio", name="select")
+                     | Reject
+               div.pull-right
+                  button.btn.btn-primary Save feedback
+                  Button.btn.btn-success I'm done
+
+      hr
+      h3 Previous Stages
       div(data-bind="foreach: opening().stages")
-         .box
-            h4(data-bind="text: name")
-            span.pull-right
-               .label.label-success Selected
-            .panel
+         .panel.panel-default
+            .panel-heading.clearfix
+               h4.panel-title.pull-left(data-bind="text: name")
+               span.pull-right
+                  .label.label-success Selected
+            .panel-body
                .comment
                   p Amitava Saha
                   p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
@@ -61,16 +67,18 @@
                      span.pull-right 12/12/14
 
    .col-md-4(data-bind="with: application")
-      h4 Notes
-      .panel(data-bind="foreach: notes")
-         .comment
-            p(data-bind="text: user.firstname")
-            p(data-bind="text: note")
-            .comment-actions
-               a Edit
-               a Remove
-               span.pull-right(data-bind="moment: createdAt, format: 'MM/DD/YYYY'")
+      h3(style="margin-top: 0px") Notes
       hr
+      ul.list-unstyled.comments(data-bind="foreach: notes")
+         li.comment
+            .author
+               strong(data-bind="text: user.firstname")
+               small.pull-right(data-bind="moment: createdAt, format: 'MM/DD/YYYY h:mm a'")
+            .content
+               p(data-bind="text: note")
+
       .add-note
-         textarea.form-control(placeholder="Add a new note", data-bind="value: $parent.newNote")
-         button.btn.btn-sm.btn-primary(data-bind="click: $parent.addNote.bind($parent)") Save
+         .form-group
+            textarea.form-control(placeholder="Add a new note", data-bind="value: $parent.newNote")
+         .form-group
+            button.btn.btn-sm.btn-primary(data-bind="click: $parent.addNote.bind($parent)") Save
