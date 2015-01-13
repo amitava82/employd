@@ -1,0 +1,45 @@
+
+<div class="page-header">
+  <h3 data-bind="text: opening().title"></h3>
+  <p class="lead">Customize this opening by adding a description, stages for interview process and user responsibe for each stage.</p>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <form data-bind="with: opening">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" data-bind="value: title" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea data-bind="value: description" class="form-control"></textarea>
+      </div>
+      <h4>Stages</h4>
+      <p>
+        Stages define the selection process workflow for an opening. By default, we create a set of default stages for you.
+        You can add or remove stages based on your requirements.
+      </p>
+      <p class="small text-info">Drag the stages to reorder. Default stage can't be reordered or removed.</p>
+      <div data-bind="foreach: stages, sortable: {model: stages}">
+        <div data-bind="css: {nosort: _default}" class="form-inline stage-item well well-sm"><strong data-bind="visible: !_default" title="Drag to recorder" class="handle">::</strong>
+          <div class="form-group mrm">
+            <label>Name:</label>
+            <input type="text" data-bind="value: name" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>User:</label>
+            <select style="width: 180px" data-bind="options: $parents[1].users, optionsText: 'firstname', optionsValue: '_id', value: user" class="form-control"></select>
+          </div>
+          <div style="margin-top: 10px" class="checkbox col-md-12 np">
+            <label>
+              <input type="checkbox" value="completed" data-bind="checked: final"/>&nbsp; Close the application if rejected in this stage.<i data-toggle="tooltip" title="If this checkbox is selected then outcome of this stage is the final outcome" class="icon icon-info-sign mlm"></i>
+            </label><a data-bind="click: $parent.removeStage.bind($parent), visible: $index() !=0" href="#" class="text-danger pull-right">Delete this stage</a>
+          </div>
+        </div>
+      </div><a data-bind="click: addStage" href="#">Add more stage</a>
+      <div class="form-group pull-right">
+        <button data-bind="click: $parent.save" class="btn btn-primary btn-lg">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

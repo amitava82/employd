@@ -4,7 +4,7 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     data = data || {};
 
     var self = this;
-
+    this.id = data._id;
     this.firstname = ko.observable(data.firstname);
     this.lastname = ko.observable(data.lastname);
     this.email = ko.observable(data.email);
@@ -12,14 +12,9 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     this.source = ko.observable(data.source);
     this.resume = ko.observable(data.resume);
     this.resumeText = ko.observable(data.resumeText);
-    this.applications = ko.observableArray();
+    this.applications = ko.observableArray(data.applications);
 
   }
-
-  Candidate.prototype.save = function(callback){
-    var data = this.toJSON();
-    svc.save(data, callback)
-  };
 
   Candidate.prototype.toJSON = function(){
     var copy = ko.toJS(this);
@@ -27,7 +22,14 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
   };
 
   Candidate.getAll = function(callback){
-    svc.getCandidates(callback);
+    svc.getCandidates(function (err, list) {
+      var tmp = [];
+      list = list || [];
+      tmp = list.map(function(i){
+        return new Candidate(i);
+      });
+      callback(err, tmp);
+    });
   };
 
   return {

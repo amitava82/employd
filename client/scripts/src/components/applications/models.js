@@ -19,6 +19,7 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     });
 
     this.notes = ko.observableArray(data.notes);
+    this.feedback = new Feedback();
   }
 
   Application.prototype.addNote = function (text, cb) {
@@ -46,6 +47,10 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     })
   };
 
+  Application.prototype.saveFeedback = function () {
+
+  };
+
   Application.getAll = function(callback){
     svc.getApplications({}, function(err, list){
       var tmp = _.map(list, function(i){
@@ -61,6 +66,14 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
       cb(err, model);
     })
   };
+
+
+  function Feedback(data){
+    data = data || {};
+    this.comment = ko.observable(data.comment);
+    this.user = ko.observable(data.user);
+    this.result = ko.observable(data.result);
+  }
 
   return {
     Application: Application

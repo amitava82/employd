@@ -105,17 +105,13 @@ module.exports = function (models) {
     show: function (req, res) {
       Application.findOne({organization: req.session.user.active_org._id, _id: req.params.id})
           .populate('candidate opening')
-          .populate({
-            path: 'assigned_to',
-            select: '-password -salt'
-          })
+          .populate('assigned_to')
           .exec()
           .then(function(application){
             if(!application) throw new Error('NotFound');
 
             return User.populate(application, {
-              path: 'opening.stages.user notes.user',
-              select: '-password -salt'
+              path: 'opening.stages.user notes.user'
             });
           })
           .then(function(resp){
@@ -152,8 +148,7 @@ module.exports = function (models) {
         })
         .then(function (doc) {
           return User.populate(doc, {
-            path: 'notes.user',
-            select: '-password -salt'
+            path: 'notes.user'
           });
 
         })

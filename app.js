@@ -12,6 +12,7 @@ var compress        = require("compression");
 var config          = require("config");
 var db              = require("./lib/db");
 var async           = require("async");
+var multer          = require("multer");
 
 
 global.config = config;
@@ -66,6 +67,7 @@ async.parallel({
 //app.use(csrf());
     app.use(compress());
     app.use(express.static(path.join(__dirname, 'client')));
+    app.use(multer({ dest: './uploads/'}));
 
     routes(app, controllers, middleware);
 

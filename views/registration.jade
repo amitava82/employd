@@ -4,22 +4,25 @@ include  includes/app
         include includes/site-nav
         .registration
             .container
-                .row
-                    .col-md-12
-                        form
+                .row.row-centered
+                    .col-md-5.col-centered.well.well
+                        h3.text-center Almost done!
+                        hr
+                        form(method="POST", action="")
                             .form-group
                                 label First Name
-                                input.form-control(type="text", name="firstname")
+                                input.form-control(type="text", name="firstname", value=(fields && fields.firstname))
                             .form-group
                                 label Last Name
-                                input.form-control(type="text", name="lastname")
+                                input.form-control(type="text", name="lastname", value=(fields && fields.lastname))
                             .form-group
                                 label Company
-                                input.form-control(type="text", name="company")
+                                input.form-control(type="text", name="company", value=(fields && fields.company))
                             .form-group
                                 label Password
                                 input.form-control(type="password", name="password")
                             .form-group
                                 label Type again
                                 input.form-control(type="password", name="confirmPassword")
+                                input(type="hidden", name="request_token", value=(request_token))
                             button.btn.btn-primary(type="submit") Continue

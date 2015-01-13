@@ -42,7 +42,7 @@ module.exports = function(models){
     login: function(req, res){
 
       var _user = null;
-      var promise = User.findOne({email: req.body.email}).exec();
+      var promise = User.findOne({email: req.body.email}).select('+password +salt').exec();
 
 
       function handleError(error){
@@ -127,7 +127,7 @@ module.exports = function(models){
 
         })
         .then(null, function (err) {
-          res.render('error', {error: err.message});
+          res.render('error', {error: 'Invalid invitation. Your invite has expired or already been used.'});
         })
     },
 
@@ -152,7 +152,7 @@ module.exports = function(models){
         })
         .then(function (user) {
           _user = user;
-          return Invite.findOneAndRemove({_id: req.params.invite}).exec();
+          return Invite.findOneAndRemove({_id: _invite.id}).exec();
         })
         .then(function(){
           return User.orgs(_user.id);
@@ -161,17 +161,23 @@ module.exports = function(models){
           createSession(req, _user, orgs);
           res.redirect('/app');
         }, function (error) {
-          var data = {
-            invite: _invite.invite,
-            request_token: req.session.request_token,
-            fields: req.body
-          };
-          if(_invite.org){
-            res.render('setup_account', data);
+          console.log(error);
+          if(error.message == "InvalidRequest" || error.message == "NotFound"){
+            res.render('error', {error: 'Invalid request'});
           }else{
-            res.render("registration", data);
+            var data = {
+              invite: _invite.invite,
+              request_token: req.session.request_token,
+              fields: req.body
+            };
+            if(_invite.org){
+              res.render('setup_account', data);
+            }else{
+              res.render("registration", data);
+            }
           }
-        })
+
+        });
     },
 
     acceptInvite: function(req, res){

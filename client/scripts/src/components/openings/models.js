@@ -7,10 +7,15 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
   models.Opening = function(data){
     data = data || {};
     var self = this;
-
+    this.id = data._id;
     this.title = ko.observable(data.title);
     this.description = ko.observable(data.description);
-    this.stages = ko.observableArray(data.stages || defaultStages);
+    this.stages = ko.observableArray([]);
+    this.created_by = ko.observable(data.created_by);
+
+    _.forEach(data.stages, function (i) {
+      self.stages.push(new models.Stage(i))
+    });
   };
 
   models.Opening.prototype = {
@@ -35,21 +40,28 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     });
   };
 
+  models.Opening.get = function (id, cb) {
+    svc.get(id, function (err, opening) {
+      if(opening){
+        var m = new models.Opening(opening);
+        cb(null, m);
+      }else{
+        cb(err);
+      }
+    })
+  };
+
   models.Stage = function(data){
     data = data || {};
     var self = this;
     this.name = ko.observable(data.name);
-    this.users = ko.observableArray(data.users || []);
-    this.feedbacks = ko.observableArray();
+    this.user = ko.observable(data.user);
+    this.category = ko.observable(data.category);
+    this._default = data['default'];
+    this.final = ko.computed(function () {
+      return self.category() == 'completed';
+    })
   };
-
-  var defaultStages = [
-    new models.Stage({name: 'Screening'}),
-    new models.Stage({name: 'Technical 1'}),
-    new models.Stage({name: 'Technical 2'}),
-    new models.Stage({name: 'Technical 3'}),
-    new models.Stage({name: 'HR'})
-  ];
 
   return models;
 

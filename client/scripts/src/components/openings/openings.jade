@@ -1,11 +1,45 @@
+.page-header
+   h2 Openings
+   p.lead Positions currently open in the organization. To create a new position, enter the name of the position and click
+      | on create to get started.
 .row
-   .col-md-9.col-md-offset-3
-      a.btn.btn-primary(href="/app/openings/new") Create
-hr
-.row
-   .col-md-3
-      ul.list-unstyled(data-bind="foreach: openings")
-         li: a(href="/app/openings/:id", data-bind="text: title, click: $parent.select")
-   .col-md-9(data-bind="if: selected")
-      h3(data-bind="text: selected().title()")
-      p(data-bind="text: selected().description()")
+   .col-md-2
+      ul.list-unstyled.side-bar
+         li: a() Active
+         li: a() Archived
+   .col-md-10
+      .row
+         !="<!-- ko foreach: openings -->"
+            .col-md-4
+               .well.well-sm.card.text-center
+                  .col-xs-12.card-title
+                     h3(href="/app/openings/:id", data-bind="text: title, click: $parent.select")
+                     p.text-muted(data-bind="text: created_by().firstname")
+                     p(data-bind="text: description")
+                  .col-xs-12.divider.mbl.np
+                     .col-xs-4.emphasis.np
+                        h3: strong.text-primary 123
+                        p:small Applications
+                     .col-xs-4.emphasis
+                        h3: strong.np.text-success 10
+                        p:small Selected
+                     .col-xs-4.emphasis.np
+                        h3: strong.text-danger 93
+                        p:small Rejected
+                  .col-xs-12
+                     .col-xs-6
+                        a.btn.btn-danger() Archive
+                     .col-xs-6
+                        a.btn.btn-primary(data-bind="attr: {href: '/app/openings/'+id}") Edit
+         !="<!-- /ko -->"
+         .col-md-4
+            .well.well-sm.card.text-center
+               .col-xs-12.card-title
+                  h5 Create a new opening
+                  p  Enter the position title and click create.
+                  input.form-control.input-lg.text-center(type="text", data-bind="value: newOpening", placeholder="e.g., NodeJS developer")
+               .col-xs-12.divider.mbl
+                  .add-new
+                     button.btn.btn-lg.btn-success(data-bind="click: create")
+                        i.icon.icon-plus-sign
+                        | &nbsp; Create

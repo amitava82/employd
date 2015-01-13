@@ -1,15 +1,25 @@
+.page-header
+    h2 Candidates
+    p.lead List of all the candidates created in the system. To assign a candidate to an opening, click on create application.
+        | If a candidate is locked, then you need to unlock the candiate before you can create application. Rejection will automatically
+        | lock the candidate.
 .row
-    .col-md-9.col-md-offset-3
-        a.btn.btn-primary(href="/app/candidates/new") Create
-hr
-.row
-    .col-md-3
-        ul.list-unstyled(data-bind="foreach: candidates")
-            li: a(href="/app/candidates/:id", data-bind="text: firstname, click: $parent.select")
-    .col-md-9
+    .col-md-2
+        a.btn.btn-primary.btn-block.mbl(href="/app/candidates/new") Create
+        ul.list-unstyled.side-bar
+            li(data-bind="css: {active: selected()}"): a(href="") All
+            li: a(href="") Selected
+            li: a(href="") Rejected
+            li: a(href="") Unscreened
+
+
+    .col-md-10
+        .button-group.mbm
+            button.btn.btn-default Create application
         table.table.table-striped
             thead
                 tr
+                    th: input(type="checkbox")
                     th First Name
                     th Last Name
                     th E-mail
@@ -19,6 +29,7 @@ hr
                     th
             tbody(data-bind="foreach: candidates")
                 tr
+                    th: input(type="checkbox")
                     td(data-bind="text: firstname")
                     td(data-bind="text: lastname")
                     td(data-bind="text: email")
@@ -28,11 +39,11 @@ hr
                         li(data-bind="text: opening.title")
 
                     td
-                        a(href="", data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} ") Create application
+                        button.btn.btn-sm.btn-default(data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} ") Create application
                         div(data-bind="if: $parent.selected() == $data")
-                            select(data-bind="options: $parent.openings, optionsText: 'title', optionsValue: '_id', value: $parent.opening")
-                            a(data-bind="click: $parent.cancelAssign") Cancel
-                            a(data-bind="click: $parent.saveAssign") Save
+                            select.form-control.input-sm(data-bind="options: $parent.openings, optionsText: 'title', value: $parent.opening")
+                            button.btn.btn-sm.btn-primary(data-bind="click: $parent.cancelAssign") Cancel
+                            button.btn.btn-sm.btn-danger(data-bind="click: $parent.saveAssign") Save
         //h3(data-bind="text: selected().title()")
         //p(data-bind="text: selected().description()")
              

@@ -41,7 +41,8 @@ var CandidateModel = function(){
       type: Boolean,
       default: false
     },
-    organization:{type: ObjId, ref: "Organization", required: true}
+    organization:{type: ObjId, ref: "Organization", required: true},
+    created_by: {type: ObjId, ref: 'User', required: true}
 
   });
   candidateSchema.plugin(timestamps);

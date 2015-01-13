@@ -23,9 +23,12 @@ define(['knockout', 'text!./candidates.tmpl.html', './models', './data'], functi
     };
 
     this.saveAssign = function () {
-      data.createApplication(self.selected()._id, self.opening(), function (err, app) {
-        console.log(err, app);
-      })
+      data.createApplication(self.selected().id, self.opening()._id, function (err, app) {
+        if(app){
+          self.selected().applications.push({opening: self.opening()});
+          self.selected(null);
+        }
+      });
     };
 
     models.Candidate.getAll(function(err, list){

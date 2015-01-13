@@ -1,9 +1,28 @@
-h1 app details
+.page-header
+   h2 Applications
+   p.lead
+      | Here is the list of applications created for all the open positions. To create a new application, go to&nbsp;
+      a(href="/app/candidates") candidates
+      | &nbsp;page and click on create application to assign a candidate to an open position.
 .row
-   .col-md-12
-      ul.list-unstyled(data-bind="foreach: applications")
-         li
-            h4(data-bind="text: candidate().firstname")
-            p(data-bind="text: opening().title")
-            a.btn.btn-primary(data-bind="attr: {href: '/app/applications/' + id}") Details
-            hr
+   .col-md-2
+      ul.list-unstyled.side-bar
+         li: a() All
+         li: a() In progress
+         li: a() Unscreened
+   .col-md-10
+      table.table.table-striped
+         thead
+            tr
+               th Name
+               th Position
+               th Current Stage
+               th Schedule
+               th
+         tbody(data-bind="foreach: applications")
+            tr
+               td(data-bind="text: candidate().firstname + ' ' + candidate().lastname")
+               td(data-bind="text: opening().title")
+               td(data-bind="text: stage().name")
+               td Not scheduled
+               td: a.btn.btn-primary.btn-sm(data-bind="attr: {href: '/app/applications/' + id}") Details

@@ -20,23 +20,22 @@ var ApplicationModel = function(){
     }
   });
 
-  var feedbackSchema = mongoose.Schema({
-    stage_id: {type: ObjId},
-    user: {type: ObjId, ref: 'User'},
-    selected: Boolean,
-    comment: String
+  var scheduleSchema = mongoose.Schema({
+    attendees: [{type: ObjId, ref: 'User', required: true}],
+    start: {type: Date, required: true},
+    end: {type: Date, required: true}
   });
+
 
   var stageSchema = mongoose.Schema({
-    name: String,
-    category: {type: String, enum: ['un_screened', 'in_progress', 'completed']},
+    stage_id: ObjId,
     user: {type: ObjId, ref: 'User'},
-    position: Number
-  });
+    schedules: [scheduleSchema],
+    feedback: String,
+    selected: {type: Boolean},
+    completed: Boolean
+  }, {_id: false});
 
-  var logSchema = mongoose.Schema({
-
-  });
 
   var applicationSchema = mongoose.Schema({
     candidate: {
@@ -57,9 +56,12 @@ var ApplicationModel = function(){
     assigned_to: {type: ObjId, ref: 'User', required: true},
     created_by: {type: ObjId, ref: 'User', required: true},
     notes: [noteSchema],
-    feedbacks: [feedbackSchema],
-    current_stage: {type: ObjId, required: true}
+    current_stage: {type: ObjId, required: true},
+    stages: [stageSchema],
+    archived: {type: Boolean, default: false},
+    status: {type: String, enum: ['in_progress', 'selected', 'rejected']}
   });
+
   applicationSchema.index({candidate: 1, opening: 1, organization: 1}, {unique: true});
   applicationSchema.plugin(timestamps);
 

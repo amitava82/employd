@@ -18,10 +18,7 @@ nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
       // Collect the nav links, forms, and other content for toggling
       .collapse.navbar-collapse.navbar-white-collapse
          ul.nav.navbar-nav.navbar-right
-            li: a(href="/app/dashboard") Dashboard
-            li: a(href="/app/applications") Applications
-            li: a(href="/app/openings") Openings
-            li: a(href="/app/candidates") Candidates
-            li: a(href="/app/settings") Settings
-            li
-               a(href='/signout', rel="external") Logout
+            !="<!-- ko foreach: menus -->"
+               li(data-bind="css: {active: active}"): a(data-bind="text: name, attr: {href: url}")
+            !="<!-- /ko -->"
+            li:  a(href='/signout', rel="external") Logout

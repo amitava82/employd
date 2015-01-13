@@ -5,7 +5,7 @@
             span(data-bind="text: opening().title")
             small.mlm
                span(data-bind="text: assigned_to().firstname")
-               | &nbsp; / &nbsp;
+               | /
                span(data-bind="text: stage().name")
    .col-md-12
       .action-btns
@@ -18,7 +18,7 @@
             div.dropdown
                button.btn.btn-success.dropdown-toggle(data-toggle="dropdown") Change Stage
                ul.dropdown-menu(data-bind="foreach: opening().stages")
-                  li: a(data-bind="text: name, click: $parent.changeStage.bind($parent)")
+                  li: a(data-bind="text: name, click: $parent.changeStage.bind($parent)", href="#", rel="external")
 
 .row
    .col-md-8(data-bind="with: application")
@@ -29,25 +29,25 @@
             p(data-bind="text: firstname + ' ' + lastname")
             p(data-bind="text: email")
             p(data-bind="text: telephone")
-            a() Resume
+            a(data-bind="attr: {href: '/api/candidates/'+_id+'/files/'+ $data.fileName}", rel="external") Resume
 
       h3 Current Stage
-      .panel.panel-primary(data-bind="with: stage", style="margin-bottom: 40px")
+      .panel.panel-primary(style="margin-bottom: 40px")
          .panel-heading
-            h4.panel-title(data-bind="text: name")
+            h4.panel-title(data-bind="text: stage().name")
          .panel-body
             strong Post your feedback
-            textarea.form-control
+            textarea.form-control(data-bind="value: feedback.comment")
             .clearfix
                .col-md-6
                   label
-                     input(type="radio", name="select")
+                     input(type="radio", name="select", data-bind="checked: feedback.result",  value="select")
                      | Select
                   label
-                     input(type="radio", name="select")
+                     input(type="radio", name="select", data-bind="checked: feedback.result",  value="reject")
                      | Reject
                div.pull-right
-                  button.btn.btn-primary Save feedback
+                  button.btn.btn-primary(data-bind="click: $parent.saveFeedback") Save feedback
                   Button.btn.btn-success I'm done
 
       hr
@@ -82,4 +82,4 @@
          .form-group
             textarea.form-control(placeholder="Add a new note", data-bind="value: $parent.newNote")
          .form-group
-            button.btn.btn-sm.btn-primary(data-bind="click: $parent.addNote.bind($parent)") Save
+            button.btn.btn-lg.btn-primary.pull-right(data-bind="click: $parent.addNote.bind($parent)") Save

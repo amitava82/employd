@@ -39,6 +39,7 @@ module.exports = function (app, controller, middleware) {
   app.get("/api/candidates/?",middleware.apiRequest, candidateController.list.bind(candidateController));
   app.get("/api/candidates/:id",middleware.apiRequest, candidateController.show.bind(candidateController));
   app.post("/api/candidates/?",middleware.apiRequest, candidateController.create.bind(candidateController));
+  app.get("/api/candidates/:id/files/:file", middleware.apiRequest, candidateController.file.bind(candidateController));
 
 
   //application

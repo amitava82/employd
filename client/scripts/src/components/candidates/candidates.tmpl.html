@@ -1,18 +1,31 @@
 
-<div class="row">
-  <div class="col-md-9 col-md-offset-3"><a href="/app/candidates/new" class="btn btn-primary">Create</a></div>
+<div class="page-header">
+  <h2>Candidates</h2>
+  <p class="lead">
+    List of all the candidates created in the system. To assign a candidate to an opening, click on create application.
+    If a candidate is locked, then you need to unlock the candiate before you can create application. Rejection will automatically
+    lock the candidate.
+  </p>
 </div>
-<hr/>
 <div class="row">
-  <div class="col-md-3">
-    <ul data-bind="foreach: candidates" class="list-unstyled">
-      <li><a href="/app/candidates/:id" data-bind="text: firstname, click: $parent.select"></a></li>
+  <div class="col-md-2"><a href="/app/candidates/new" class="btn btn-primary btn-block mbl">Create</a>
+    <ul class="list-unstyled side-bar">
+      <li data-bind="css: {active: selected()}"><a href="">All</a></li>
+      <li><a href="">Selected</a></li>
+      <li><a href="">Rejected</a></li>
+      <li><a href="">Unscreened</a></li>
     </ul>
   </div>
-  <div class="col-md-9">
+  <div class="col-md-10">
+    <div class="button-group mbm">
+      <button class="btn btn-default">Create application</button>
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>
+            <input type="checkbox"/>
+          </th>
           <th>First Name</th>
           <th>Last Name</th>
           <th>E-mail</th>
@@ -24,6 +37,9 @@
       </thead>
       <tbody data-bind="foreach: candidates">
         <tr>
+          <th>
+            <input type="checkbox"/>
+          </th>
           <td data-bind="text: firstname"></td>
           <td data-bind="text: lastname"></td>
           <td data-bind="text: email"></td>
@@ -34,9 +50,12 @@
               <li data-bind="text: opening.title"></li>
             </ul>
           </td>
-          <td><a href="" data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} ">Create application</a>
+          <td>
+            <button data-bind="click: $parent.startAssign, css: {hidden: $parent.selected() == $data} " class="btn btn-sm btn-default">Create application</button>
             <div data-bind="if: $parent.selected() == $data">
-              <select data-bind="options: $parent.openings, optionsText: 'title', optionsValue: '_id', value: $parent.opening"></select><a data-bind="click: $parent.cancelAssign">Cancel</a><a data-bind="click: $parent.saveAssign">Save</a>
+              <select data-bind="options: $parent.openings, optionsText: 'title', value: $parent.opening" class="form-control input-sm"></select>
+              <button data-bind="click: $parent.cancelAssign" class="btn btn-sm btn-primary">Cancel</button>
+              <button data-bind="click: $parent.saveAssign" class="btn btn-sm btn-danger">Save</button>
             </div>
           </td>
         </tr>

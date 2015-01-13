@@ -25,8 +25,18 @@ define(['knockout', './models', 'text!./applications-details.tmpl.html', './data
 
   ViewModel.prototype.getUsers = function () {
     var self = this;
+    if(self.users().length) return;
+
     svc.getUsers(function(err, users){
       self.users(users);
+    });
+  };
+
+  ViewModel.prototype.saveFeedback = function(){
+    var self = this;
+    console.log(feedback);
+    self.saveFeedback(function(err, app){
+
     });
   };
 

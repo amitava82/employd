@@ -8,7 +8,7 @@ require([
   ko.components.register("applications-details", {require: "components/applications/applications-details"});
   ko.components.register("candidates-create", {require: "components/candidates/candidates-create"});
   ko.components.register("openings", {require: "components/openings/openings"});
-  ko.components.register("openings-create", {require: "components/openings/openings-create"});
+  ko.components.register("openings-details", {require: "components/openings/openings-details"});
   ko.components.register("nav-bar", {require: "components/nav-bar/nav-bar"});
 
 });

@@ -43,12 +43,14 @@ var UserModel = function(){
     salt: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      select: false
     },
     password: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      select: false
     },
     org: {
       type: {

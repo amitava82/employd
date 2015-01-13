@@ -1,36 +1,49 @@
 
+<div class="page-header">
+  <h2>Create a new candidate</h2>
+  <p class="lead">You can also create a candidate by forwarding email to funnel-candidate@funnel.com</p>
+</div>
 <div class="row">
-  <div class="com-md-8">
-    <form data-bind="with: candidate">
+  <div class="col-md-5">
+    <form data-bind="with: candidate, jqform: {onSubmit: onSubmit}" action="/api/candidates" method="POST" class="mbl">
       <div class="form-group">
-        <label>First Name</label>
-        <input type="text" data-bind="value: firstname" class="form-control"/>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>First Name</label>
+            <input type="text" data-bind="value: firstname" name="firstname" class="form-control"/>
+          </div>
+          <div class="col-sm-6">
+            <label>Last Name</label>
+            <input type="text" data-bind="value: lastname" name="lastname" class="form-control"/>
+          </div>
+        </div>
       </div>
       <div class="form-group">
-        <label>Last Name</label>
-        <input type="text" data-bind="value: lastname" class="form-control"/>
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="text" data-bind="value: email" class="form-control"/>
-      </div>
-      <div class="form-group">
-        <label>Telephone</label>
-        <input type="text" data-bind="value: telephone" class="form-control"/>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>Email</label>
+            <input type="text" data-bind="value: email" name="email" class="form-control"/>
+          </div>
+          <div class="col-sm-6">
+            <label>Telephone</label>
+            <input type="text" data-bind="value: telephone" name="telephone" class="form-control"/>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label>Source</label>
-        <input type="text" data-bind="value: source" class="form-control"/>
+        <input type="text" data-bind="value: source" name="source" placeholder="internet, job portal, agency" class="form-control"/>
       </div>
       <div class="form-group">
         <label>Resume</label>
-        <!--input.form-control(type="file", data-bind="value: resume")-->
+        <input type="file" data-bind="value: resume" name="resume" class="form-control input-lg"/>
       </div>
       <div class="form-group">
         <label>Resume Text</label>
-        <textarea data-bind="value: resumeText" class="form-control"></textarea>
+        <textarea data-bind="value: resumeText" name="resumeText" placeholder="Copy and paste plain text resume here" class="form-control"></textarea>
       </div>
-      <button data-bind="click: $parent.save" type="button" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-primary btn-lg">Save</button>
+      <button class="btn btn-default btn-lg pull-right">Cancel</button>
     </form>
   </div>
 </div>

@@ -3,6 +3,9 @@ var utilities = require("../lib/utilities");
 var _ = require("lodash");
 var config = global.config;
 var output = require('../lib/output');
+var fs = require('fs-extra');
+var when = require('when');
+var path = require('path');
 
 module.exports = function(models){
   var Candidate = models.Candidate;
@@ -11,12 +14,40 @@ module.exports = function(models){
 
   return {
     create: function (req, res) {
-      Candidate.create(_.extend({organization: req.session.user.active_org._id}, req.body), function(err, opening){
-        if(err)
+
+      var candidate = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        telephone: req.body.telephone,
+        source: req.body.source,
+        resumeText: req.body.resumeText,
+        organization: req.session.user.active_org._id,
+        created_by: req.session.user.id
+      };
+
+      if(req.files.resume){
+        candidate.fileName = req.files.resume.name;
+      }
+      Candidate.create(candidate)
+        .then(function (c) {
+          var defer = when.defer();
+
+          if(candidate.fileName){
+            var dest = path.join(config.storage.path, req.session.user.active_org._id, candidate.fileName);
+            fs.move(req.files.resume.path, dest, {clobber: false}, function(err){
+              defer.resolve(c);
+            });
+          }else{
+            defer.resolve(c);
+          }
+          return defer.promise;
+        })
+        .then(function (c) {
+          output.success(res, c);
+        }, function (err) {
           output.error(res, err);
-        else
-          output.success(res, opening);
-      });
+        }).end();
     },
 
     show: function(req, res){
@@ -45,6 +76,15 @@ module.exports = function(models){
 
     delete: function (req, res) {
 
+    },
+
+    file: function (req, res) {
+      var filepath = path.join(config.storage.path, req.session.user.active_org._id, req.params.file);
+      if(fs.existsSync(filepath)){
+        res.download(filepath);
+      }else{
+        res.send(404, {error: 'NotFound'});
+      }
     }
   }
 };

@@ -3,6 +3,7 @@ define(["knockout", "jquery"], function(ko, $){
     //this.router = router;
     this.route = router.currentRoute;
     this.user = ko.observable();
+    this.loading = ko.observableArray();
   }
 
   App.prototype.init = function(user){

@@ -1,13 +1,36 @@
 
-<h1>app details</h1>
+<div class="page-header">
+  <h2>Applications</h2>
+  <p class="lead">Here is the list of applications created for all the open positions. To create a new application, go to&nbsp;<a href="/app/candidates">candidates</a>&nbsp;page and click on create application to assign a candidate to an open position.</p>
+</div>
 <div class="row">
-  <div class="col-md-12">
-    <ul data-bind="foreach: applications" class="list-unstyled">
-      <li>
-        <h4 data-bind="text: candidate().firstname"></h4>
-        <p data-bind="text: opening().title"></p><a data-bind="attr: {href: '/app/applications/' + id}" class="btn btn-primary">Details</a>
-        <hr/>
-      </li>
+  <div class="col-md-2">
+    <ul class="list-unstyled side-bar">
+      <li><a>All</a></li>
+      <li><a>In progress</a></li>
+      <li><a>Unscreened</a></li>
     </ul>
+  </div>
+  <div class="col-md-10">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Current Stage</th>
+          <th>Schedule</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody data-bind="foreach: applications">
+        <tr>
+          <td data-bind="text: candidate().firstname + ' ' + candidate().lastname"></td>
+          <td data-bind="text: opening().title"></td>
+          <td data-bind="text: stage().name"></td>
+          <td>Not scheduled</td>
+          <td><a data-bind="attr: {href: '/app/applications/' + id}" class="btn btn-primary btn-sm">Details</a></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

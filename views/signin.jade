@@ -3,14 +3,13 @@ include  includes/app
    body
       //include includes/site-nav
       .login-block
-         .container
-            .row
-               .col-md-12
-                  form(action="/signin", method="post")
-                     .form-group
-                        label Email:
-                        input.form-control(type="email", name="email", placeholder="name@work.com")
-                     .form-group
-                        label Password:
-                        input.form-control(type="password", name="password", placeholder="Your password")
-                     button.btn.btn-primary(type="submit") Submit
+         .row
+            .col-md-12
+               form(action="/signin", method="post")
+                  .form-group
+                     label Email:
+                     input.form-control(type="email", name="email", placeholder="name@work.com")
+                  .form-group
+                     label Password:
+                     input.form-control(type="password", name="password", placeholder="Your password")
+                  button.btn.btn-primary(type="submit") Submit

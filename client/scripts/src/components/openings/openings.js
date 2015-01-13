@@ -1,10 +1,10 @@
-define(['knockout', 'text!./openings.tmpl.html', './models'], function(ko, tmpl, models){
+define(['knockout', 'text!./openings.tmpl.html', './models', './data', 'pagejs'], function(ko, tmpl, models, svc, page){
 
   function ViewModel(){
     var self = this;
     this.openings = ko.observableArray();
     this.selected = ko.observable();
-
+    this.newOpening = ko.observable();
     this.select = function(model){
       self.selected(model);
     };
@@ -14,6 +14,13 @@ define(['knockout', 'text!./openings.tmpl.html', './models'], function(ko, tmpl,
     });
 
   }
+  ViewModel.prototype.create = function () {
+    svc.create({title: this.newOpening()}, function (err, opening) {
+      if(opening){
+        page('/app/openings/'+opening._id);
+      }
+    });
+  };
 
   ViewModel.prototype.get = function(){};
 

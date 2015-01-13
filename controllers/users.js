@@ -20,7 +20,7 @@ module.exports = function(models){
     },
 
     show: function(req, res){
-      User.findOne({_id: req.params.id, organization: req.session.user.active_org._id}, '-password -salt', function(err, resp){
+      User.findOne({_id: req.params.id, organization: req.session.user.active_org._id}, function(err, resp){
         if(err){
           output.error(res, err);
         }else{
@@ -30,9 +30,14 @@ module.exports = function(models){
     },
 
     list: function (req, res) {
-      Organization.findOne({_id: req.session.user.active_org._id}).select('users').populate('users.user', '-password -salt').exec()
+      Organization.findOne({_id: req.session.user.active_org._id}).select('users').populate('users.user').lean().exec()
         .then(function (org) {
-          output.success(res, org.users);
+          var users = _.map(org.users, function(u){
+            var user = u.user;
+            user.role = u.role;
+            return user;
+          });
+          output.success(res, users);
         }, function(err){
           output.error(res, err);
         });

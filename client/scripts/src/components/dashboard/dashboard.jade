@@ -1,13 +1,15 @@
-h1 Dashboard
+.page-header
+    h2 Dashboard
+    p.lead Here are the summery of your work items.
 .row
-    .col-md-4
-        .list-group
-            a.list-group-item(href="#", data-bind="click: doFilter.bind(null, 'created'), css: {active: filter() == 'created'}") My Items
-            a.list-group-item(href="#", data-bind="click: doFilter.bind(null, 'assigned'), css: {active: filter() == 'assigned'}") Assigned
-            a.list-group-item(href="#", data-bind="click: doFilter.bind(null, 'scheduled'), css: {active: filter() == 'scheduled'}") Scheduled
-            a.list-group-item(href="#") All
+    .col-md-2
+        ul.list-unstyled.side-bar
+            li: a(href="#", data-bind="click: doFilter.bind(null, 'created'), css: {active: filter() == 'created'}") My Items
+            li: a(href="#", data-bind="click: doFilter.bind(null, 'assigned'), css: {active: filter() == 'assigned'}") Assigned
+            li: a(href="#", data-bind="click: doFilter.bind(null, 'scheduled'), css: {active: filter() == 'scheduled'}") Scheduled
+            li: a(href="#") All
 
-    .col-md-8
+    .col-md-10
         table.table.table-striped
             thead
                 tr

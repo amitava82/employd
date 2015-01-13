@@ -1,8 +1,12 @@
 include  includes/app
     include includes/app-header
     body
-        <nav-bar params="app: $root"></nav-bar>
-        #container.container
-            div(data-bind="component: {name:route().page, params: $root}")
-
-    include includes/scripts
+        div#wrapper
+            <nav-bar params="app: $root"></nav-bar>
+            .loading(data-bind="visible: $root.loading().length")
+                i.icon-spinner.icon-spin
+                span &nbsp; Loading...
+            #container.container
+                div(data-bind="component: {name:route().page, params: $root}")
+            include includes/app-footer
+        include includes/scripts

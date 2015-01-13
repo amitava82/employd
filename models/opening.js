@@ -2,15 +2,16 @@
 var mongoose = require('mongoose');
 var timestamps = require('mongoose-timestamp');
 var ObjId = mongoose.Schema.Types.ObjectId;
+var stageSchema = require('./stageSchema');
 
 var OpeningModel = function(){
 
-  var stageSchema = mongoose.Schema({
-    name: String,
-    category: {type: String, enum: ['un_screened', 'in_progress', 'completed']},
-    user: {type: ObjId, ref: 'User'},
-    position: Number
-  });
+  //var stageSchema = mongoose.Schema({
+  //  name: String,
+  //  category: {type: String, enum: ['un_screened', 'in_progress', 'completed']},
+  //  user: {type: ObjId, ref: 'User'},
+  //  position: Number
+  //}, {_id: false});
 
   var openingSchema = mongoose.Schema({
     created_by: {

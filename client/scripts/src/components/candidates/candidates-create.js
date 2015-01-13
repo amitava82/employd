@@ -1,4 +1,4 @@
-define(['knockout', 'text!./candidates-create.tmpl.html', 'request', 'pagejs', './models'],
+define(['knockout', 'text!./candidates-create.tmpl.html', 'request', 'pagejs', './models', 'jquery.form', 'jquery'],
   function(ko, tmpl, request, page, models){
 
     function ViewModel(){
@@ -10,6 +10,14 @@ define(['knockout', 'text!./candidates-create.tmpl.html', 'request', 'pagejs', '
           console.log(err);
         })
       }
+
+      this.onSubmit = function (err, data) {
+        console.log(err, data);
+        if(data){
+          page('/app/candidates');
+        }
+      }
+
     }
 
     return {

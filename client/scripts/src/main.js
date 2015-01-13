@@ -17,25 +17,42 @@ require.config({
     registry: "./registry",
     request: "./request",
     'ko.custom': "./ko.custom",
-    bootstrap: "//cdn.jsdelivr.net/bootstrap/3.3.1/js/bootstrap.min"
+    bootstrap: "//cdn.jsdelivr.net/bootstrap/3.3.1/js/bootstrap.min",
+    'jquery.form': "//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min",
+    storage: "../lib/simpleStorage",
+    sortable: "../lib/jquery.sortable"
   },
   shim: {
-    bootstrap: {deps: ['jquery']}
+    bootstrap: {deps: ['jquery']},
+    sortable: {deps: ['jquery']}
   }
 });
 
 define(['knockout', 'funnel', 'router', 'registry', 'jquery', 'bootstrap', 'ko.custom'], function(ko, App, router, components, $){
+
+  var app = new App(router);
+  app.init(window.user);
+  delete window.user;
+
   $.ajaxSetup({
     statusCode : {
       401 : function (xhr) {
         console.log(xhr)
         window.location = "/signin";
       }
+    },
+    beforeSend: function () {
+      app.loading.push(true);
+    },
+    complete: function () {
+      app.loading.pop();
     }
   });
-  var app = new App(router);
-  app.init(window.user);
-  delete window.user;
+
+  $('body').tooltip({
+    selector: '[data-toggle="tooltip"]'
+  });
+  
   setTimeout(function(){
     ko.applyBindings(app);
   }, 100);

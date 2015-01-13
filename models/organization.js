@@ -2,46 +2,37 @@
 var mongoose = require('mongoose');
 var timestamps = require('mongoose-timestamp');
 var ObjId = mongoose.Schema.Types.ObjectId;
+var when = require('when');
 
 var OrganizationModel = function(){
 
   var defaultStages = [{
     name: 'Screening',
     category: 'un_screened',
-    default: true,
-    position: 0
+    default: true
   }, {
     name: 'Telephonic',
-    category: 'in_progress',
-    position: 1
+    category: 'in_progress'
   }, {
     name: 'Face to Face',
-    category: 'in_progress',
-    position: 2
+    category: 'in_progress'
   }, {
     name: 'HR Round',
     category: 'in_progress',
-    position: 3
-  }, {
-    name: 'Hired',
-    category: 'completed',
-    position: 4
-  }, {
-    name: 'Rejected',
-    category: 'completed',
-    position: 5
+    final: true
   }];
 
   var userPermission = mongoose.Schema({
     user: {type: ObjId, ref: 'User', required: true},
     role: {type: String, required: true}
-  });
+  },{ _id : false });
 
   var stageSchema = mongoose.Schema({
     name: String,
-    category: {type: String, enum: ['un_screened', 'in_progress', 'completed']},
+    category: {type: String, enum: ['un_screened', 'in_progress']},
     user: {type: ObjId, ref: 'User'},
-    position: Number
+    default: {type: Boolean, default: false},
+    final: {type: Boolean, default: false}
   });
 
   var organizationSchema = mongoose.Schema({
@@ -68,18 +59,35 @@ var OrganizationModel = function(){
       i.user = owner;
       org.stages.push(i);
     });
-
-    return org.save(callback);
+    var d = when.defer();
+    org.save(function (err, resp) {
+      if(err){
+        d.reject(err);
+      }else{
+        d.resolve(resp);
+      }
+      callback && callback(err, resp);
+    });
+    return d.promise;
   };
 
   organizationSchema.statics.addUser = function (orgId, userId, role, callback) {
-    this.findOne({_id: orgId}).exec()
+    return this.findOne({_id: orgId}).exec()
       .then(function (org) {
         if(!org) throw new Error('NotFound');
 
         org.users.push({user: userId, role: role});
-        org.save(callback);
 
+        var d = when.defer();
+        org.save(function(err, org){
+          if(err){
+            d.reject(err);
+          }else{
+            d.resolve(org);
+          }
+          callback && callback(err, org);
+        });
+        return d.promise;
       });
   };
 

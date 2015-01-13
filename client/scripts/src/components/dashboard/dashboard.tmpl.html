@@ -1,10 +1,18 @@
 
-<h1>Dashboard</h1>
+<div class="page-header">
+  <h2>Dashboard</h2>
+  <p class="lead">Here are the summery of your work items.</p>
+</div>
 <div class="row">
-  <div class="col-md-4">
-    <div class="list-group"><a href="#" data-bind="click: doFilter.bind(null, 'created'), css: {active: filter() == 'created'}" class="list-group-item">My Items</a><a href="#" data-bind="click: doFilter.bind(null, 'assigned'), css: {active: filter() == 'assigned'}" class="list-group-item">Assigned</a><a href="#" data-bind="click: doFilter.bind(null, 'scheduled'), css: {active: filter() == 'scheduled'}" class="list-group-item">Scheduled</a><a href="#" class="list-group-item">All</a></div>
+  <div class="col-md-2">
+    <ul class="list-unstyled side-bar">
+      <li><a href="#" data-bind="click: doFilter.bind(null, 'created'), css: {active: filter() == 'created'}">My Items</a></li>
+      <li><a href="#" data-bind="click: doFilter.bind(null, 'assigned'), css: {active: filter() == 'assigned'}">Assigned</a></li>
+      <li><a href="#" data-bind="click: doFilter.bind(null, 'scheduled'), css: {active: filter() == 'scheduled'}">Scheduled</a></li>
+      <li><a href="#">All</a></li>
+    </ul>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-10">
     <table class="table table-striped">
       <thead>
         <tr>

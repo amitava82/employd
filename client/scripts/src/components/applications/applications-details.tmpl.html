@@ -2,7 +2,7 @@
 <div data-bind="with: application" class="row">
   <div class="col-md-12">
     <div class="page-title">
-      <h1><span data-bind="text: opening().title"></span><small class="mlm"><span data-bind="text: assigned_to().firstname"></span>&nbsp; / &nbsp;<span data-bind="text: stage().name"></span></small></h1>
+      <h1><span data-bind="text: opening().title"></span><small class="mlm"><span data-bind="text: assigned_to().firstname"></span>/<span data-bind="text: stage().name"></span></small></h1>
     </div>
   </div>
   <div class="col-md-12">
@@ -19,7 +19,7 @@
       <div class="dropdown">
         <button data-toggle="dropdown" class="btn btn-success dropdown-toggle">Change Stage</button>
         <ul data-bind="foreach: opening().stages" class="dropdown-menu">
-          <li><a data-bind="text: name, click: $parent.changeStage.bind($parent)"></a></li>
+          <li><a data-bind="text: name, click: $parent.changeStage.bind($parent)" href="#" rel="external"></a></li>
         </ul>
       </div>
     </div>
@@ -34,27 +34,27 @@
       <div data-bind="with: candidate" class="panel-body">
         <p data-bind="text: firstname + ' ' + lastname"></p>
         <p data-bind="text: email"></p>
-        <p data-bind="text: telephone"></p><a>Resume</a>
+        <p data-bind="text: telephone"></p><a data-bind="attr: {href: '/api/candidates/'+_id+'/files/'+ $data.fileName}" rel="external">Resume</a>
       </div>
     </div>
     <h3>Current Stage</h3>
-    <div data-bind="with: stage" style="margin-bottom: 40px" class="panel panel-primary">
+    <div style="margin-bottom: 40px" class="panel panel-primary">
       <div class="panel-heading">
-        <h4 data-bind="text: name" class="panel-title"></h4>
+        <h4 data-bind="text: stage().name" class="panel-title"></h4>
       </div>
       <div class="panel-body"><strong>Post your feedback</strong>
-        <textarea class="form-control"></textarea>
+        <textarea data-bind="value: feedback.comment" class="form-control"></textarea>
         <div class="clearfix">
           <div class="col-md-6">
             <label>
-              <input type="radio" name="select"/>Select
+              <input type="radio" name="select" data-bind="checked: feedback.result" value="select"/>Select
             </label>
             <label>
-              <input type="radio" name="select"/>Reject
+              <input type="radio" name="select" data-bind="checked: feedback.result" value="reject"/>Reject
             </label>
           </div>
           <div class="pull-right">
-            <button class="btn btn-primary">Save feedback</button>
+            <button data-bind="click: $parent.saveFeedback" class="btn btn-primary">Save feedback</button>
             <Button class="btn btn-success">I'm done</Button>
           </div>
         </div>
@@ -95,7 +95,7 @@
         <textarea placeholder="Add a new note" data-bind="value: $parent.newNote" class="form-control"></textarea>
       </div>
       <div class="form-group">
-        <button data-bind="click: $parent.addNote.bind($parent)" class="btn btn-sm btn-primary">Save</button>
+        <button data-bind="click: $parent.addNote.bind($parent)" class="btn btn-lg btn-primary pull-right">Save</button>
       </div>
     </div>
   </div>

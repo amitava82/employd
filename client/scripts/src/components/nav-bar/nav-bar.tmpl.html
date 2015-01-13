@@ -14,12 +14,8 @@
     </div>
     <!-- Collect the nav links, forms, and other content for toggling-->
     <div class="collapse navbar-collapse navbar-white-collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/app/dashboard">Dashboard</a></li>
-        <li><a href="/app/applications">Applications</a></li>
-        <li><a href="/app/openings">Openings</a></li>
-        <li><a href="/app/candidates">Candidates</a></li>
-        <li><a href="/app/settings">Settings</a></li>
+      <ul class="nav navbar-nav navbar-right"><!-- ko foreach: menus -->
+        <li data-bind="css: {active: active}"><a data-bind="text: name, attr: {href: url}"></a></li><!-- /ko -->
         <li><a href="/signout" rel="external">Logout</a></li>
       </ul>
     </div>

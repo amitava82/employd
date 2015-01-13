@@ -22,7 +22,7 @@ define(['knockout', 'pagejs'], function(ko, page){
       params: {page: 'openings-create'}
     }, {
       url: '/openings/:id',
-      params: {page: 'openings-edit'}
+      params: {page: 'openings-details'}
     }, {
       url: '/candidates',
       params: {page: 'candidates'}
