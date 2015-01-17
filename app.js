@@ -22,7 +22,7 @@ var routes = require("./routes/routes");
 var middleware = require("./routes/middleware")(models);
 
 var app = express();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || config.server.port || 3000;
 
 db.init(config.keys.mongodb.connectionString);
 

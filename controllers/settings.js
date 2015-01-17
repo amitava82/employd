@@ -14,11 +14,10 @@ module.exports = function (models) {
 
   return {
 
-    users: function (req, res) {
-
-    },
-
     inviteUser: function (req, res) {
+
+      //TODO check permission
+
       var _invite = null;
       Invite.findOne({email: req.body.email}).exec()
         .then(function (invite) {
@@ -38,7 +37,7 @@ module.exports = function (models) {
                 }
               })
               .then(function(){
-                var role = req.body.role || 'hr';
+                var role = req.body.role || 'user';
                 return Invite.create({email: req.body.email, org: req.session.user.active_org._id, role: role, from: req.session.user._id});
               });
           }
@@ -53,6 +52,22 @@ module.exports = function (models) {
         }, function (err) {
           output.error(res, err);
         });
+    },
+
+    removeUser: function (req, res) {
+      if(req.session.user.active_org.role != 'admin'){
+        output.error(res, new Error('PermissionEror'), 403);
+      }else{
+        Organization.findByIdAndUpdate(req.session.user.active_org._id, {
+          $pull: {users: {user: req.params.id}}
+        }, function (err) {
+          if(err){
+            output.error(res, err);
+          }else{
+            output.success(res, {success: true});
+          }
+        })
+      }
     }
   }
 };

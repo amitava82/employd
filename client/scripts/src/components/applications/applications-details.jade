@@ -29,7 +29,9 @@
             p(data-bind="text: firstname + ' ' + lastname")
             p(data-bind="text: email")
             p(data-bind="text: telephone")
-            a(data-bind="attr: {href: '/api/candidates/'+_id+'/files/'+ $data.fileName}", rel="external") Resume
+            a.btn.btn-default.btn-sm(data-bind="attr: {href: '/api/candidates/'+_id+'/files/'+ $data.fileName}", rel="external")
+               i.icon.icon-save
+               | &nbsp;Download resume
 
       h3 Current Stage
       .panel.panel-primary(style="margin-bottom: 40px")
@@ -37,22 +39,23 @@
             h4.panel-title(data-bind="text: stage().name")
          .panel-body
             strong Post your feedback
-            textarea.form-control(data-bind="value: feedback.comment")
-            .clearfix
-               .col-md-6
-                  label
-                     input(type="radio", name="select", data-bind="checked: feedback.result",  value="select")
+            textarea.form-control.mbm(data-bind="value: feedback.feedback")
+            .clearfix.row
+               .col-md-6.mts
+                  label.mrm
+                     input.mrs(type="radio", name="status", data-bind="checked: feedback.status",  value="selected")
                      | Select
                   label
-                     input(type="radio", name="select", data-bind="checked: feedback.result",  value="reject")
+                     input.mrs(type="radio", name="status", data-bind="checked: feedback.status",  value="rejected")
                      | Reject
-               div.pull-right
+               .col-md-6.text-right
                   button.btn.btn-primary(data-bind="click: $parent.saveFeedback") Save feedback
                   Button.btn.btn-success I'm done
 
       hr
       h3 Previous Stages
-      div(data-bind="foreach: opening().stages")
+      p.lead(data-bind="if: stages().length == 0") This is the first stage of this application.
+      div(data-bind="foreach: stages")
          .panel.panel-default
             .panel-heading.clearfix
                h4.panel-title.pull-left(data-bind="text: name")
@@ -71,7 +74,7 @@
       div You can add notes about this application. Notes are visible to everyone & can't be deleted.
       hr
       ul.list-unstyled.comments(data-bind="foreach: notes")
-         li.comment
+         li.comment(data-bind="css: {alt: $index()%2 !== 0}")
             .author
                strong(data-bind="text: user.firstname")
                small.pull-right(data-bind="moment: createdAt, format: 'MM/DD/YYYY h:mm a'")

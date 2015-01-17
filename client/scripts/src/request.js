@@ -23,9 +23,9 @@ define(['jquery'], function ($) {
       url +=  model.join('/');
     }else{
       url += model;
-      if(data.id){
-        url += '/' + data.id;
-      }
+    }
+    if(data.id){
+      url += '/' + data.id;
     }
     delete data.id;
     return url;
@@ -58,6 +58,9 @@ define(['jquery'], function ($) {
     },
 
     list: function (model, data, callback) {
+      if(typeof data === 'function'){
+        callback = data;
+      }
       makeRequest(model, 'GET', data, callback);
     },
 

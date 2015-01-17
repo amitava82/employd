@@ -24,7 +24,7 @@ var OrganizationModel = function(){
 
   var userPermission = mongoose.Schema({
     user: {type: ObjId, ref: 'User', required: true},
-    role: {type: String, required: true}
+    role: {type: String, required: true, enum: ['admin', 'hr', 'user']}
   },{ _id : false });
 
   var stageSchema = mongoose.Schema({

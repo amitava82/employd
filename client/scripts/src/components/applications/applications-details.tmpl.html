@@ -34,7 +34,7 @@
       <div data-bind="with: candidate" class="panel-body">
         <p data-bind="text: firstname + ' ' + lastname"></p>
         <p data-bind="text: email"></p>
-        <p data-bind="text: telephone"></p><a data-bind="attr: {href: '/api/candidates/'+_id+'/files/'+ $data.fileName}" rel="external">Resume</a>
+        <p data-bind="text: telephone"></p><a data-bind="attr: {href: '/api/candidates/'+_id+'/files/'+ $data.fileName}" rel="external" class="btn btn-default btn-sm"><i class="icon icon-save"></i>&nbsp;Download resume</a>
       </div>
     </div>
     <h3>Current Stage</h3>
@@ -43,17 +43,17 @@
         <h4 data-bind="text: stage().name" class="panel-title"></h4>
       </div>
       <div class="panel-body"><strong>Post your feedback</strong>
-        <textarea data-bind="value: feedback.comment" class="form-control"></textarea>
-        <div class="clearfix">
-          <div class="col-md-6">
-            <label>
-              <input type="radio" name="select" data-bind="checked: feedback.result" value="select"/>Select
+        <textarea data-bind="value: feedback.feedback" class="form-control mbm"></textarea>
+        <div class="clearfix row">
+          <div class="col-md-6 mts">
+            <label class="mrm">
+              <input type="radio" name="status" data-bind="checked: feedback.status" value="selected" class="mrs"/>Select
             </label>
             <label>
-              <input type="radio" name="select" data-bind="checked: feedback.result" value="reject"/>Reject
+              <input type="radio" name="status" data-bind="checked: feedback.status" value="rejected" class="mrs"/>Reject
             </label>
           </div>
-          <div class="pull-right">
+          <div class="col-md-6 text-right">
             <button data-bind="click: $parent.saveFeedback" class="btn btn-primary">Save feedback</button>
             <Button class="btn btn-success">I'm done</Button>
           </div>
@@ -62,7 +62,8 @@
     </div>
     <hr/>
     <h3>Previous Stages</h3>
-    <div data-bind="foreach: opening().stages">
+    <p data-bind="if: stages().length == 0" class="lead">This is the first stage of this application.</p>
+    <div data-bind="foreach: stages">
       <div class="panel panel-default">
         <div class="panel-heading clearfix">
           <h4 data-bind="text: name" class="panel-title pull-left"></h4><span class="pull-right">
@@ -83,7 +84,7 @@
     <div>You can add notes about this application. Notes are visible to everyone & can't be deleted.</div>
     <hr/>
     <ul data-bind="foreach: notes" class="list-unstyled comments">
-      <li class="comment">
+      <li data-bind="css: {alt: $index()%2 !== 0}" class="comment">
         <div class="author"><strong data-bind="text: user.firstname"></strong><small data-bind="moment: createdAt, format: 'MM/DD/YYYY h:mm a'" class="pull-right"></small></div>
         <div class="content">
           <p data-bind="text: note"></p>

@@ -22,14 +22,15 @@ module.exports = function (app, controller, middleware) {
   app.get("/switch/:id", middleware.authRoute, authController.switchOrg.bind(authController));
 
   //org stuff
-  app.get("/api/org/users", middleware.apiRequest, settingsController.users.bind(settingsController));
   app.post("/api/org/users/invite", middleware.apiRequest, settingsController.inviteUser.bind(settingsController));
+  app.delete("/api/org/users/:id", middleware.apiRequest, settingsController.removeUser.bind(settingsController));
 
 
   //opening route
   app.get("/api/openings/?", middleware.apiRequest, openingController.list.bind(openingController));
   app.get("/api/openings/:id", middleware.apiRequest, openingController.show.bind(openingController));
   app.post("/api/openings", middleware.apiRequest, openingController.create.bind(openingController));
+  app.put("/api/openings/:id", middleware.apiRequest, openingController.update.bind(openingController));
 
   //user
   app.get("/api/users/?", middleware.apiRequest, usersController.list.bind(usersController));

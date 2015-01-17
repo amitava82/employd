@@ -34,9 +34,9 @@ define(['knockout', './models', 'text!./applications-details.tmpl.html', './data
 
   ViewModel.prototype.saveFeedback = function(){
     var self = this;
-    console.log(feedback);
+    console.log(ko.toJS(self.feedback));
     self.saveFeedback(function(err, app){
-
+      console.log(err, app);
     });
   };
 

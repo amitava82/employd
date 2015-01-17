@@ -22,8 +22,17 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     addStage: function () {
       this.stages.push(new models.Stage());
     },
+
     removeStage: function(stage){
       this.stages.remove(stage);
+    },
+
+    save: function (cb) {
+      var self = this;
+      var data = ko.toJSON(self);
+      data = JSON.parse(data);
+      delete data.created_by;
+      svc.save(data, cb);
     }
   };
 
@@ -54,13 +63,12 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
   models.Stage = function(data){
     data = data || {};
     var self = this;
+    this._id = data._id;
     this.name = ko.observable(data.name);
     this.user = ko.observable(data.user);
     this.category = ko.observable(data.category);
-    this._default = data['default'];
-    this.final = ko.computed(function () {
-      return self.category() == 'completed';
-    })
+    this.isDefault = data.isDefault;
+    this.final = ko.observable(!!data.final);
   };
 
   return models;

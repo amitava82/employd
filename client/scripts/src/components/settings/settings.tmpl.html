@@ -1,0 +1,116 @@
+
+<div class="page-header">
+  <h2>Settings</h2>
+</div>
+<div class="row">
+  <div class="col-md-2">
+    <ul class="list-unstyled side-bar">
+      <li data-bind="css: {active: tab == 'account'}"><a href="/app/settings/account">Account settings</a></li>
+      <li data-bind="css: {active: tab == 'password'}"><a href="/app/settings/password">Change password</a></li>
+      <li data-bind="css: {active: tab == 'users'}"><a href="/app/settings/users">Users</a></li>
+      <li data-bind="css: {active: tab == 'others'}"><a href="/app/settings/misc">Nottifications</a></li>
+    </ul>
+  </div>
+  <div class="col-md-10">
+    <div data-bind="if: tab == 'account'" class="account settings">
+      <h3>Account</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>First name</label>
+            <input type="text" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>Last name</label>
+            <input type="text" class="form-control"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-bind="if: tab == 'password'" class="password settings">
+      <h3>Change password</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Current password</label>
+            <input type="password" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>New password</label>
+            <input type="password" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>Type again</label>
+            <input type="password" class="form-control"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-bind="if: tab == 'preferences'" class="preferences settings">
+      <h3>Preferences</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Timezone</label>
+            <select class="form-control"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-bind="if: tab == 'users'" class="users settings">
+      <h3>Invite User</h3>
+      <p class="lead">
+        Plese enter email address of the person you want to invite. We'll send an email with instructions to
+        the user with details.
+      </p>
+      <div data-bind="with: invite" class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label>E-mail</label>
+                  <input data-bind="value: email" type="email" placeholder="user@example.com" class="form-control"/>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label>Role</label>
+                  <select data-bind="options: ['user', 'hr'], optionsCaption: 'Choose...', value: role" class="form-control"></select>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group nolabel">
+                  <button data-bind="click: $parent.sendInvite, enable: email &amp;&amp; role" class="btn btn-primary">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <h3>Users</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody data-bind="foreach: users">
+              <tr>
+                <td data-bind="text: firstname"></td>
+                <td data-bind="text: email"></td>
+                <td data-bind="text: role"></td>
+                <td><a data-bind="if: $root.user().id !== _id, click: $parent.deleteUser" href="#" class="text-danger">Delete</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,8 +7,12 @@
   <div class="col-md-2">
     <ul class="list-unstyled side-bar">
       <li><a>All</a></li>
+      <li><a>Created</a></li>
+      <li><a>Assigned</a></li>
       <li><a>In progress</a></li>
       <li><a>Unscreened</a></li>
+      <li><a>Selected</a></li>
+      <li><a>Rejected</a></li>
     </ul>
   </div>
   <div class="col-md-10">
@@ -28,7 +32,7 @@
           <td data-bind="text: opening().title"></td>
           <td data-bind="text: stage().name"></td>
           <td>Not scheduled</td>
-          <td><a data-bind="attr: {href: '/app/applications/' + id}" class="btn btn-primary btn-sm">Details</a></td>
+          <td><a data-bind="attr: {href: '/app/applications/' + id}" class="btn btn-primary btn-sm">Open</a></td>
         </tr>
       </tbody>
     </table>

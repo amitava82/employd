@@ -18,16 +18,11 @@ define(['knockout', 'text!./openings-details.tmpl.html', 'request', 'pagejs', '.
     })
   }
 
-  ViewModel.prototype.save = function(){
-    console.log(ko.toJSON(this));
-    return
-    request.create('openings', ko.toJSON(this), function(err, resp){
-      if(err){
-        console.log(err);
-      }else{
-        page.redirect('/openings')
-      }
-    });
+  ViewModel.prototype.save = function(model, e){
+    e.preventDefault();
+    this.save(function (err, opening) {
+      console.log(err, opening)
+    })
   };
 
   return {

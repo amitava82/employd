@@ -8,8 +8,12 @@
    .col-md-2
       ul.list-unstyled.side-bar
          li: a() All
+         li: a() Created
+         li: a() Assigned
          li: a() In progress
          li: a() Unscreened
+         li: a() Selected
+         li: a() Rejected
    .col-md-10
       table.table.table-striped
          thead
@@ -25,4 +29,4 @@
                td(data-bind="text: opening().title")
                td(data-bind="text: stage().name")
                td Not scheduled
-               td: a.btn.btn-primary.btn-sm(data-bind="attr: {href: '/app/applications/' + id}") Details
+               td: a.btn.btn-primary.btn-sm(data-bind="attr: {href: '/app/applications/' + id}") Open

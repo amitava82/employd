@@ -1,0 +1,76 @@
+.page-header
+   h2 Settings
+.row
+   .col-md-2
+      ul.list-unstyled.side-bar
+         li(data-bind="css: {active: tab == 'account'}"): a(href="/app/settings/account") Account settings
+         li(data-bind="css: {active: tab == 'password'}"): a(href="/app/settings/password") Change password
+         li(data-bind="css: {active: tab == 'users'}"): a(href="/app/settings/users") Users
+         li(data-bind="css: {active: tab == 'others'}"): a(href="/app/settings/misc") Nottifications
+   .col-md-10
+      .account.settings(data-bind="if: tab == 'account'")
+         h3 Account
+         .row
+            .col-md-6
+               .form-group
+                  label First name
+                  input.form-control(type="text")
+               .form-group
+                  label Last name
+                  input.form-control(type="text")
+      .password.settings(data-bind="if: tab == 'password'")
+         h3 Change password
+         .row
+            .col-md-6
+               .form-group
+                  label Current password
+                  input.form-control(type="password")
+               .form-group
+                  label New password
+                  input.form-control(type="password")
+               .form-group
+                  label Type again
+                  input.form-control(type="password")
+      .preferences.settings(data-bind="if: tab == 'preferences'")
+         h3 Preferences
+         .row
+            .col-md-6
+               .form-group
+                  label Timezone
+                  select.form-control()
+      .users.settings(data-bind="if: tab == 'users'")
+         h3 Invite User
+         p.lead Plese enter email address of the person you want to invite. We'll send an email with instructions to
+            | the user with details.
+         .row(data-bind="with: invite")
+            .col-md-8
+               .form-group
+                  .row
+                     .col-sm-6
+                        .form-group
+                           label E-mail
+                           input.form-control(data-bind="value: email", type="email", placeholder="user@example.com")
+                     .col-sm-4
+                        .form-group
+                           label Role
+                           select.form-control(data-bind="options: ['user', 'hr'], optionsCaption: 'Choose...', value: role")
+                     .col-sm-2
+                        .form-group.nolabel
+                           button.btn.btn-primary(data-bind="click: $parent.sendInvite, enable: email && role") Send
+
+         .row
+            .col-md-8
+               h3 Users
+               table.table.table-striped
+                  thead
+                     tr
+                        th Name
+                        th Email
+                        th Role
+                        th
+                  tbody(data-bind="foreach: users")
+                     tr
+                        td(data-bind="text: firstname")
+                        td(data-bind="text: email")
+                        td(data-bind="text: role")
+                        td: a.text-danger(data-bind="if: $root.user().id !== _id, click: $parent.deleteUser", href="#") Delete

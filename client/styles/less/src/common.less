@@ -34,13 +34,25 @@ body {
   bottom: 0;
   padding: 15px 50px;
   background-color: #f8f8f8;
+
+  .footer-links{
+    li{
+      display: inline-block;
+      margin-right: 10px;
+      font-weight: bold;
+
+      > a{
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .side-bar{
   font-size: 14px;
   li{
     margin-left: -10px;
-    padding-left: 10px;
+    padding: 0 15px;
     border-color: white;
     -webkit-transition: border-left 400ms;
     -moz-transition: border-left 400ms;
@@ -98,4 +110,8 @@ body {
 
 .sortable-dragging{
   opacity: .8;
+}
+
+.form-group.nolabel{
+  margin-top: 28px;
 }

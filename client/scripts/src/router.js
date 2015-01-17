@@ -42,7 +42,7 @@ define(['knockout', 'pagejs'], function(ko, page){
       url: '/applications/:id',
       params:{page: 'applications-details'}
     }, {
-      url: '/settings',
+      url: '/settings/:tab?',
       params: {page: 'settings'}
     }
     ];
@@ -50,13 +50,15 @@ define(['knockout', 'pagejs'], function(ko, page){
     page.base('/app');
 
     routes.forEach(function(route){
-      page(route.url, function(ctx){
+      page(route.url, function(ctx, next){
         console.log(ctx);
         currentRoute(ko.utils.extend(ctx, route.params));
       });
     });
+
     page("*", function(){
       console.log("not found")
+      page('/dashboard');
     });
 
     page({

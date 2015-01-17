@@ -3,6 +3,7 @@ var utilities = require("../lib/utilities");
 var _ = require("lodash");
 var config = global.config;
 var output = require('../lib/output');
+var when = require('when');
 
 module.exports = function(models){
   var Opening = models.Opening,
@@ -35,7 +36,44 @@ module.exports = function(models){
     },
 
     update: function(req, res){
+      Opening.findOne({_id: req.params.id, organization: req.session.user.active_org._id})
+        .exec()
+        .then(function (opening) {
+          if(!opening) throw new Error('NotFound');
 
+          var data = req.body;
+          var stages = data.stages;
+          opening.title = data.title;
+          opening.description = data.description;
+
+          var defaultStage = opening.stages[0];
+          stages.forEach(function (stage) {
+            stage.isDefault = false;
+          });
+
+          if(!defaultStage._id.equals(stages[0]._id)){
+            throw new Error('DefaultStageError');
+          }else{
+            stages[0].isDefault = true;
+            stages[0].category = 'un_screened';
+          }
+          opening.stages = stages;
+
+          var d = when.defer();
+          opening.save(function (err, opening) {
+            if(err){
+              d.reject(err);
+            }else{
+              d.resolve(opening);
+            }
+          });
+          return d.promise;
+        })
+        .then(function (opening) {
+          output.success(res, opening);
+        }, function (err) {
+          output.error(res, err);
+        }).end();
     },
 
     show: function(req, res){
@@ -67,8 +105,8 @@ module.exports = function(models){
         });
     },
 
-    delete: function (req, res) {
-
+    complete: function (req, res) {
+      //todo mark stage completed
     }
   }
 };

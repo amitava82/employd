@@ -21,14 +21,14 @@
       </p>
       <p class="small text-info">Drag the stages to reorder. Default stage can't be reordered or removed.</p>
       <div data-bind="foreach: stages, sortable: {model: stages}">
-        <div data-bind="css: {nosort: _default}" class="form-inline stage-item well well-sm"><strong data-bind="visible: !_default" title="Drag to recorder" class="handle">::</strong>
+        <div data-bind="css: {nosort: isDefault}" class="form-inline stage-item well well-sm"><strong data-bind="visible: !isDefault" title="Drag to recorder" class="handle">::</strong>
           <div class="form-group mrm">
             <label>Name:</label>
             <input type="text" data-bind="value: name" class="form-control"/>
           </div>
           <div class="form-group">
             <label>User:</label>
-            <select style="width: 180px" data-bind="options: $parents[1].users, optionsText: 'firstname', optionsValue: '_id', value: user" class="form-control"></select>
+            <select data-bind="options: $parents[1].users, optionsText: 'firstname', optionsValue: '_id', value: user" style="width: 180px" class="form-control"></select>
           </div>
           <div style="margin-top: 10px" class="checkbox col-md-12 np">
             <label>
@@ -36,9 +36,11 @@
             </label><a data-bind="click: $parent.removeStage.bind($parent), visible: $index() !=0" href="#" class="text-danger pull-right">Delete this stage</a>
           </div>
         </div>
-      </div><a data-bind="click: addStage" href="#">Add more stage</a>
-      <div class="form-group pull-right">
-        <button data-bind="click: $parent.save" class="btn btn-primary btn-lg">Save</button>
+      </div>
+      <div class="mbl"><a data-bind="click: addStage" href="#">Add more stage</a></div>
+      <div class="form-group">
+        <button data-bind="click: $parent.save" type="button" class="btn btn-primary btn-lg">Save</button>
+        <button type="button" class="btn btn-default btn-lg pull-right">Cancel</button>
       </div>
     </form>
   </div>

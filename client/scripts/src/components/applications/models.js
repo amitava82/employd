@@ -9,7 +9,7 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     this.opening = ko.observable(data.opening);
     this.assigned_to = ko.observable(data.assigned_to);
     this.current_stage = ko.observable(data.current_stage);
-
+    this.stages = ko.observableArray(data.stages);
     this.stage = ko.computed(function(){
      var opening = self.opening();
      var stage = self.current_stage();
@@ -17,9 +17,15 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
        return _.findWhere(opening.stages, {_id: stage});
       }
     });
-
+    var lastStage = this.stages.pop();
     this.notes = ko.observableArray(data.notes);
-    this.feedback = new Feedback();
+
+    if(!lastStage){
+      this.feedback = new Feedback({stage_id: this.current_stage});
+    }else{
+      this.feedback = new Feedback(lastStage);
+    }
+
   }
 
   Application.prototype.addNote = function (text, cb) {
@@ -47,8 +53,10 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
     })
   };
 
-  Application.prototype.saveFeedback = function () {
-
+  Application.prototype.saveFeedback = function (callback) {
+    var self = this;
+    var feedback = ko.toJS(self.feedback);
+    svc.addFeedback(self.id, feedback, callback);
   };
 
   Application.getAll = function(callback){
@@ -70,12 +78,16 @@ define(['knockout', './data', 'lodash'], function(ko, svc, _){
 
   function Feedback(data){
     data = data || {};
-    this.comment = ko.observable(data.comment);
+    this.stage_id = data.stage_id;
+    this.feedback = ko.observable(data.feedback);
     this.user = ko.observable(data.user);
-    this.result = ko.observable(data.result);
+    this.status = ko.observable(data.status);
+    this.completed = data.completed;
+    this.schedules = data.schedules;
   }
 
   return {
-    Application: Application
+    Application: Application,
+    Feedback: Feedback
   }
 });

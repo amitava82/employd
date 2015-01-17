@@ -105,13 +105,12 @@ module.exports = function (models) {
     show: function (req, res) {
       Application.findOne({organization: req.session.user.active_org._id, _id: req.params.id})
           .populate('candidate opening')
-          .populate('assigned_to')
           .exec()
           .then(function(application){
             if(!application) throw new Error('NotFound');
 
             return User.populate(application, {
-              path: 'opening.stages.user notes.user'
+              path: 'opening.stages.user notes.user stages.user assigned_to created_by'
             });
           })
           .then(function(resp){
@@ -122,11 +121,67 @@ module.exports = function (models) {
     },
 
     addFeedback: function (req, res) {
+      var appId = req.params.id;
+      var feedback = {
+        stage_id: req.body.stage_id,
+        user: req.session.user.id,
+        feedback: req.body.feedback,
+        status: req.body.status
+      };
 
-    },
+      if(['selected', 'rejected'].indexOf(feedback.status) > -1){
+        feedback.status = req.body.status;
+      }
 
-    updateFeedback: function (req, res) {
+      Application.findOne({_id: appId, organization: req.session.user.active_org._id})
+        .populate({path: 'opening', options: {lean: true}})
+        .exec()
+        .then(function (app) {
+          if(!app)
+            throw new Error('NotFound');
 
+          if(app.assigned_to != req.session.user.id)
+            throw new Error('PermissionError');
+
+          if(app.current_stage != feedback.stage_id)
+            throw new Error('InvalidStageError');
+
+          var stageDef = _.find(app.opening.stages,function(i){
+            return i._id.equals(feedback.stage_id);
+          });
+
+          // If stage is configured as final, result is rejected
+          // then we set the application rejected
+          if(stageDef.final && feedback.status == 'rejected'){
+            app.status = 'rejected';
+          }
+
+          var f = _.find(app.stages, function (i) {
+            return i.stage_id.equals(feedback.stage_id);
+          });
+
+          if(!f){
+            app.stages.push(feedback);
+          }else{
+            f.feedback = feedback.feedback;
+            f.status = feedback.status;
+          }
+          var d = when.defer();
+          app.save(function (err, app) {
+            if(err){
+              d.reject(err);
+            }else{
+              d.resolve(app);
+            }
+          });
+
+          return d.promise;
+        })
+        .then(function (app) {
+          output.success(res, app);
+        }, function (err) {
+          output.error(res, err);
+        });
     },
 
     addNote: function (req, res) {

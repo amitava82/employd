@@ -1,0 +1,3 @@
+server:
+  host: employd.io
+  port: 3000

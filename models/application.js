@@ -28,12 +28,12 @@ var ApplicationModel = function(){
 
 
   var stageSchema = mongoose.Schema({
-    stage_id: ObjId,
-    user: {type: ObjId, ref: 'User'},
+    stage_id: {type: ObjId, required: true},
+    user: {type: ObjId, ref: 'User', required: true},
     schedules: [scheduleSchema],
     feedback: String,
-    selected: {type: Boolean},
-    completed: Boolean
+    status: {type: String, enum: ['selected', 'rejected']},
+    completed: {type: Boolean, default: false}
   }, {_id: false});
 
 
@@ -59,7 +59,7 @@ var ApplicationModel = function(){
     current_stage: {type: ObjId, required: true},
     stages: [stageSchema],
     archived: {type: Boolean, default: false},
-    status: {type: String, enum: ['in_progress', 'selected', 'rejected']}
+    status: {type: String, enum: ['in_progress', 'selected', 'rejected'], default: 'in_progress'}
   });
 
   applicationSchema.index({candidate: 1, opening: 1, organization: 1}, {unique: true});

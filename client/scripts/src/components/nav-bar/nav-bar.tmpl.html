@@ -3,20 +3,26 @@
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display-->
     <div class="navbar-header">
-      <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/">Funnel</a>
-      <div class="dropdown"><a data-toggle="dropdown" href="#" rel="external" class="dropdown-toggle"><span data-bind="text: user().active_org.name"></span>
-          <div class="caret"></div></a>
-        <ul data-bind="foreach: user().orgs" class="dropdown-menu">
-          <li><a data-bind="text: name, attr: {href: '/switch/' + _id}" rel="external"></a></li>
-        </ul>
-      </div>
-      <div data-bind="text: user().name + ' (' + user().active_org.role + ')' "></div>
+      <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Employ<span class="text-primary">d</span></a>
+      <div class="dropdown"></div>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling-->
     <div class="collapse navbar-collapse navbar-white-collapse">
-      <ul class="nav navbar-nav navbar-right"><!-- ko foreach: menus -->
-        <li data-bind="css: {active: active}"><a data-bind="text: name, attr: {href: url}"></a></li><!-- /ko -->
-        <li><a href="/signout" rel="external">Logout</a></li>
+      <ul data-bind="foreach: menus" class="nav navbar-nav">
+        <li data-bind="css: {active: active}"><a data-bind="text: name, attr: {href: url}"></a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <!--li: a(data-bind="text: user().name + ' (' + user().active_org.role + ')' ")-->
+        <li class="dropdown user-menu"><a data-toggle="dropdown" href="#" rel="external" class="dropdown-toggle"><strong data-bind="text: user().active_org.name"></strong>
+            <div class="caret"></div></a>
+          <ul class="dropdown-menu">
+            <li data-bind="text: user().name + ' / ' + user().active_org.role" class="name"></li>
+            <li class="header"><strong class="text-muted">Organizations</strong></li><!-- ko foreach: user().orgs -->
+            <li><a data-bind="text: name, attr: {href: '/switch/' + _id}" rel="external"></a></li><!-- /ko -->
+            <li class="divider"></li>
+            <li><a href="/signout" rel="external">Logout</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>

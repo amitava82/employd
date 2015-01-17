@@ -13,6 +13,8 @@ keys:
     cookie:
       domain: .getfunnel.io
       maxAge: 86400000
+  mandrill:
+    secret: xOzSbagjpBd4urFTHJrcQQ
 urls:
       ui:
         host: getfunnel.io
@@ -20,4 +22,6 @@ urls:
         protocol: http
 storage:
   path: /Users/amitava/funnel/data
-
+server:
+  host: getfunnel.com
+  port: 3000
