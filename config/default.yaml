@@ -11,17 +11,17 @@ keys:
     key: 4ofcob7vut
     ttl: 86400000
     cookie:
-      domain: .getfunnel.io
+      domain: .employd.io
       maxAge: 86400000
   mandrill:
     secret: xOzSbagjpBd4urFTHJrcQQ
 urls:
       ui:
-        host: getfunnel.io
+        host: employd.io
         port: 3000
         protocol: http
 storage:
   path: /Users/amitava/funnel/data
 server:
-  host: getfunnel.com
+  host: employd.io
   port: 3000

@@ -2,23 +2,31 @@ include  includes/app
     include includes/site-header
     body
         include includes/site-nav
-        .intro-header
+        #intro-header
             .container
-                .row
-                    .col-lg-12
+                .row.row-centered
+                    .col-md-10.col-centered(style="text-align: center")
                         .intro-message
-                            h1 Recruitment Workflow Simplified
-                            h4 Funnel simplifies recruitment process by making information available when you need it.
+                            h1 Hiring simplified
+                            h4 Employd is a free, simple yet powerful tool to manage hiring process.
                             hr.intro-divider
-                            form.form-inline.form-inline.col-md-8.col-md-offset-2(action="/signup", method="post")
-                                .col-xs-7
-                                    input.form-control.input-lg.text-center(type="email", name="email", placeholder="name@work.com", style="width: 100%")
-                                .col-xs-4
-                                    button.btn.btn-success.btn-lg(type="submit") Get Started for Free!
+                            p.desc Drop long email threads, spreadsheet & complicted software for managing recruitment workflow.
+                                | Employd gives you visibility over entire hiring process so that you can stop
+                                | searching in your inbox and focus on finding next awesome talent for your team.
+                            p
+                                a(href="#features").btn.btn-primary.btn-lg.mrl
+                                    i.fa.fa-angle-double-down
+                                    span &nbsp;Learn more
+                                a(href="#signup").btn.btn-default.btn-lg
+                                    i.fa.fa-pencil
+                                    span &nbsp;Signup
+
+
+
             // /.container
         // /.intro-header
         // Page Content
-        .content-section-a
+        #features.content-section-a
             .container
                 .row
                     .col-lg-5.col-sm-6
@@ -73,44 +81,99 @@ include  includes/app
                     .col-lg-5.col-lg-offset-2.col-sm-6
                         img.img-responsive(src='/images/phones.png', alt='')
             // /.container
-        // /.content-section-a
-        .banner
+
+        #signup.container-signup
             .container
                 .row
-                    .col-lg-6
-                        h2 Connect to Start Bootstrap:
-                    .col-lg-6
-                        ul.list-inline.banner-social-buttons
-                            li
-                                a.btn.btn-default.btn-lg(href='https://twitter.com/SBootstrap')
-                                    i.fa.fa-twitter.fa-fw
-                                    span.network-name Twitter
-                            li
-                                a.btn.btn-default.btn-lg(href='https://github.com/IronSummitMedia/startbootstrap')
-                                    i.fa.fa-github.fa-fw
-                                    span.network-name Github
-                            li
-                                a.btn.btn-default.btn-lg(href='#')
-                                    i.fa.fa-linkedin.fa-fw
-                                    span.network-name Linkedin
+                    .col-md-12
+                        h2 Signup for employ
+                            span.text-primary d
+                        form#form-invite.form-inline(action="/signup", method="post")
+                            p employd right now is invite only. Please request for an invite below  and we will send you invite as soon as we can.
+                                br
+                                | We won't sell your email address to anyone, promise.
+                            .col-md-12
+                                input.form-control.input-lg.text-center(type="email", name="email", placeholder="name@work.com", style="width: 40%; margin-right: 20px")
+                                button.btn.btn-primary.btn-lg(type="submit") Send me an invite!
+        // /.content-section-a
+        .banner
+            #container-contact.container
+                .row
+                    .col-lg-12
+                        h2 Contact Us
+                        .lead Questions, requests or any other thing
+                    .col-lg-12
+                        .row
+                            .col-md-6
+                                h4 Send message
+                                form(method="post", action="/contact")
+                                    input.form-control.input-lg.mbm(type="text", name="email", placeholder="Email", required)
+                                    input.form-control.input-lg.mbm(type="text", name="subject", placeholder="subject", required)
+                                    textarea.form-control.mbm(placeholder="Message", name="message", required)
+                                    button.btn.btn-primary.btn-lg(type="submit") Submit
+                            .col-md-5.col-md-offset-1
+                                h4 About US
+                                p Small group of people making life easier
+                                h4 Address
+                                p
+                                    i.fa.fa-map-marker
+                                    span &nbsp;#2 Pipeline Road, Jalahalli, Bangalore, India
             // /.container
         // /.banner
         // Footer
         footer
             .container
                 .row
-                    .col-lg-12
-                        ul.list-inline
+                    .col-md-6
+                        ul.list-inline(style="margin-top: 15px")
                             li
-                                a(href='#home') Home
+                                a(href='/privacy') Privacy policy
                             li.footer-menu-divider ⋅
                             li
-                                a(href='#about') About
+                                a(href='/tos') Terms of service
                             li.footer-menu-divider ⋅
-                            li
-                                a(href='#services') Services
-                            li.footer-menu-divider ⋅
-                            li
-                                a(href='#contact') Contact
-                        p.copyright.text-muted.small Copyright © Your Company 2014. All Rights Reserved
+                    .col-md-6
+                        p.copyright.text-right Copyright © employd 2015. All Rights Reserved
         // jQuery
+
+        script.
+            $(function(){
+                $('a[href*=#]').bind("click", function (e) {
+                    var anchor = $(this);
+                    $('html, body').stop().animate({
+                        scrollTop: $(anchor.attr('href')).offset().top - 50
+                    }, 900);
+                    e.preventDefault();
+                });
+
+                var lastId,
+                    topMenu = $("#navigations"),
+                    topMenuHeight = topMenu.outerHeight()+40,
+                        // All list items
+                    menuItems = topMenu.find("a:not([rel=external])"),
+                        // Anchors corresponding to menu items
+                    scrollItems = menuItems.map(function(){
+                        var item = $($(this).attr("href"));
+                        if (item.length) { return item; }
+                    });
+                                    // Bind to scroll
+                $(window).scroll(function () {
+                    // Get container scroll position
+                    var fromTop = $(this).scrollTop() + topMenuHeight;
+                    // Get id of current scroll item
+                    var cur = scrollItems.map(function () {
+                        if ($(this).offset().top < fromTop)
+                            return this;
+                    });
+                    // Get the id of the current element
+                    cur = cur[cur.length - 1];
+                    var id = cur && cur.length ? cur[0].id : "";
+                    if (lastId !== id) {
+                        lastId = id;
+                        // Set/remove active class
+                        menuItems
+                                .parent().removeClass("active")
+                                .end().filter("[href=#" + id + "]").parent().addClass("active");
+                    }
+                });
+            });

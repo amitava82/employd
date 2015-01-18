@@ -1,3 +1,2 @@
-server:
-  host: employd.io
-  port: 3000
+storage:
+  path: /home/amitava/employd/data
